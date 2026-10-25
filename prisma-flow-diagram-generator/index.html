@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PRISMA Flow Diagram Generator — Free Online, No Sign-Up</title>
+<meta name="description" content="Free online PRISMA 2020 flow diagram generator. Enter your identification, screening and inclusion counts and download a publication-ready flow diagram as PNG. No sign-up, runs entirely in your browser.">
+<style>
+  body { font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin: 0; color: #1a1a1a; background: #fafafa; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 24px 16px 64px; }
+  h1 { font-size: 28px; margin: 8px 0 6px; }
+  h2 { font-size: 20px; margin: 32px 0 8px; }
+  p.lead { color: #444; font-size: 16px; line-height: 1.55; }
+  .grid { display: flex; gap: 24px; flex-wrap: wrap; align-items: flex-start; }
+  form { background: #fff; border: 1px solid #ddd; border-radius: 10px; padding: 16px 18px; width: 320px; box-sizing: border-box; }
+  form h3 { margin: 14px 0 6px; font-size: 15px; color: #0b5394; }
+  form h3:first-child { margin-top: 0; }
+  label { display: block; font-size: 13px; margin: 8px 0 2px; color: #333; }
+  input[type=number] { width: 100%; padding: 6px 8px; font-size: 14px; border: 1px solid #bbb; border-radius: 6px; box-sizing: border-box; }
+  input[readonly] { background: #f0f0f0; color: #555; }
+  .preview { flex: 1; min-width: 340px; background: #fff; border: 1px solid #ddd; border-radius: 10px; padding: 12px; box-sizing: border-box; }
+  .preview svg { width: 100%; height: auto; }
+  button { background: #0b5394; color: #fff; border: 0; border-radius: 8px; padding: 10px 18px; font-size: 15px; cursor: pointer; margin-top: 12px; }
+  button:hover { background: #084a82; }
+  .faq p, .howto li { line-height: 1.6; color: #333; }
+  .note { font-size: 13px; color: #666; }
+  footer { margin-top: 48px; font-size: 13px; color: #777; border-top: 1px solid #e2e2e2; padding-top: 12px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>PRISMA Flow Diagram Generator</h1>
+  <p class="lead">Build a <strong>PRISMA 2020 flow diagram</strong> for your systematic review in under a minute. Type in your counts — the diagram updates live — then download a publication-ready PNG. Free, no sign-up, and everything runs in your browser (your numbers never leave your computer).</p>
+
+  <div class="grid">
+    <form id="inputs" onsubmit="return false;">
+      <h3>Identification</h3>
+      <label>Records identified from databases (n)</label>
+      <input type="number" id="dbRecords" value="1250" min="0">
+      <label>Records identified from registers (n)</label>
+      <input type="number" id="regRecords" value="25" min="0">
+      <label>Duplicate records removed (n)</label>
+      <input type="number" id="dupRemoved" value="310" min="0">
+      <label>Records marked ineligible by automation tools (n)</label>
+      <input type="number" id="autoRemoved" value="0" min="0">
+      <label>Records removed for other reasons (n)</label>
+      <input type="number" id="otherRemoved" value="5" min="0">
+
+      <h3>Screening</h3>
+      <label>Records screened (n) — calculated</label>
+      <input type="number" id="screened" readonly>
+      <label>Records excluded at title/abstract screening (n)</label>
+      <input type="number" id="screenExcluded" value="880" min="0">
+      <label>Reports sought for retrieval (n) — calculated</label>
+      <input type="number" id="sought" readonly>
+      <label>Reports not retrieved (n)</label>
+      <input type="number" id="notRetrieved" value="6" min="0">
+      <label>Reports assessed for eligibility (n) — calculated</label>
+      <input type="number" id="assessed" readonly>
+      <label>Reports excluded at full-text stage (n)</label>
+      <input type="number" id="ftExcluded" value="61" min="0">
+      <label>Exclusion reasons (optional, one per line)</label>
+      <input type="text" id="ftReasons" value="Wrong population (n = 24), Wrong intervention (n = 21), Wrong study design (n = 16)">
+
+      <h3>Included</h3>
+      <label>Studies included in review (n)</label>
+      <input type="number" id="studiesIncluded" value="13" min="0">
+      <label>Reports of included studies (n)</label>
+      <input type="number" id="reportsIncluded" value="13" min="0">
+    </form>
+
+    <div class="preview">
+      <div id="diagram"></div>
+      <button id="downloadBtn" type="button">Download PNG</button>
+      <p class="note">Tip: for journal submission, download the PNG and check that every count adds up — records screened = identified − removed before screening; reports assessed = sought − not retrieved; studies included should match the reports that survive full-text exclusion.</p>
+    </div>
+  </div>
+
+  <h2>How to fill in a PRISMA 2020 flow diagram</h2>
+  <ol class="howto">
+    <li><strong>Identification.</strong> Start with the raw yield of your search: records from databases (e.g. PubMed, Embase, Web of Science combined) and from registers (e.g. trial registries), then subtract everything removed before screening — duplicates, automation-flagged records, and records removed for other reasons.</li>
+    <li><strong>Screening.</strong> The records you actually screened by title and abstract, minus the ones you excluded, gives the reports you sought for retrieval. Subtract reports you could not retrieve to get the reports assessed for eligibility in full text.</li>
+    <li><strong>Included.</strong> After full-text exclusions (list the reasons with counts), what remains is the set of included studies — and the number of reports describing them, which can be higher when one study has several publications.</li>
+  </ol>
+
+  <h2>Frequently asked questions</h2>
+  <div class="faq">
+    <p><strong>What is a PRISMA flow diagram?</strong><br>It is the flowchart required by the PRISMA 2020 reporting guideline that shows how studies were identified, screened and included in a systematic review. Almost every journal that publishes systematic reviews expects one.</p>
+    <p><strong>Is this generator free?</strong><br>Yes. It is free to use and the PNG download carries no watermark and requires no account.</p>
+    <p><strong>Which PRISMA version does it follow?</strong><br>The layout follows the PRISMA 2020 flow diagram for new systematic reviews that included searches of databases and registers.</p>
+    <p><strong>Can one included study have several reports?</strong><br>Yes. A single study may be described by a protocol paper, a main results paper and a follow-up paper. PRISMA 2020 therefore asks for both numbers: studies included, and reports of included studies.</p>
+    <p><strong>Is my data uploaded anywhere?</strong><br>No. The diagram is drawn locally in your browser; nothing is sent to a server.</p>
+  </div>
+
+  <footer><a href="../index.html">Meta Workbench</a> — free tools & field notes for systematic reviewers, built by a clinician-researcher. More tools (forest plot maker, risk-of-bias traffic-light plot) are in preparation. PRISMA is a registered reporting guideline; this tool is not affiliated with the PRISMA Group.</footer>
+</div>
+
+<script>
+(function () {
+  var ids = ["dbRecords","regRecords","dupRemoved","autoRemoved","otherRemoved","screenExcluded","notRetrieved","ftExcluded","studiesIncluded","reportsIncluded"];
+  function val(id) { var v = parseInt(document.getElementById(id).value, 10); return isNaN(v) || v < 0 ? 0 : v; }
+
+  function box(x, y, w, h, lines, fill) {
+    var s = '<rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + h + '" rx="4" fill="' + (fill || "#ffffff") + '" stroke="#333" stroke-width="1.2"/>';
+    var startY = y + h / 2 - (lines.length - 1) * 9 + 4;
+    for (var i = 0; i < lines.length; i++) {
+      s += '<text x="' + (x + w / 2) + '" y="' + (startY + i * 18) + '" text-anchor="middle" font-size="12.5" fill="#111">' + lines[i] + "</text>";
+    }
+    return s;
+  }
+  function arrow(x, y1, y2) {
+    return '<line x1="' + x + '" y1="' + y1 + '" x2="' + x + '" y2="' + (y2 - 6) + '" stroke="#333" stroke-width="1.2"/><polygon points="' + (x - 4) + "," + (y2 - 6) + " " + (x + 4) + "," + (y2 - 6) + " " + x + "," + y2 + '" fill="#333"/>';
+  }
+  function hArrow(x1, x2, y) {
+    return '<line x1="' + x1 + '" y1="' + y + '" x2="' + (x2 - 6) + '" y2="' + y + '" stroke="#333" stroke-width="1.2"/><polygon points="' + (x2 - 6) + "," + (y - 4) + " " + (x2 - 6) + "," + (y + 4) + " " + x2 + "," + y + '" fill="#333"/>';
+  }
+  function phaseLabel(x, y, text) {
+    return '<rect x="' + x + '" y="' + y + '" width="26" height="150" rx="4" fill="#0b5394"/><text x="' + (x + 13) + '" y="' + (y + 75) + '" text-anchor="middle" font-size="12" fill="#fff" transform="rotate(-90 ' + (x + 13) + " " + (y + 75) + ')">' + text + "</text>";
+  }
+  function esc(t) { return t.replace(/&/g, "&amp;").replace(/</g, "&lt;"); }
+
+  function render() {
+    var identified = val("dbRecords") + val("regRecords");
+    var removed = val("dupRemoved") + val("autoRemoved") + val("otherRemoved");
+    var screened = Math.max(identified - removed, 0);
+    var sought = Math.max(screened - val("screenExcluded"), 0);
+    var assessed = Math.max(sought - val("notRetrieved"), 0);
+    document.getElementById("screened").value = screened;
+    document.getElementById("sought").value = sought;
+    document.getElementById("assessed").value = assessed;
+
+    var reasons = document.getElementById("ftReasons").value.split(",").map(function (t) { return t.trim(); }).filter(Boolean);
+    var exclLines = ["Reports excluded (n = " + val("ftExcluded") + ")"];
+    reasons.forEach(function (r) { exclLines.push(esc(r)); });
+    var exclH = Math.max(56, 22 + exclLines.length * 18);
+
+    var svg = '<svg id="prismaSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 640">';
+    svg += '<rect x="0" y="0" width="700" height="640" fill="#ffffff"/>';
+    svg += phaseLabel(8, 20, "Identification");
+    svg += phaseLabel(8, 250, "Screening");
+    svg += phaseLabel(8, 520, "Included");
+    // Identification row
+    svg += box(50, 20, 290, 84, ["Records identified from:", "Databases (n = " + val("dbRecords") + ")", "Registers (n = " + val("regRecords") + ")"]);
+    svg += box(380, 20, 290, 84, ["Records removed before screening:", "Duplicates (n = " + val("dupRemoved") + ")", "Automation-ineligible (n = " + val("autoRemoved") + ")", "Other reasons (n = " + val("otherRemoved") + ")"]);
+    svg += hArrow(340, 380, 62);
+    // Screening rows
+    svg += arrow(195, 104, 140);
+    svg += box(50, 140, 290, 56, ["Records screened", "(n = " + screened + ")"]);
+    svg += box(380, 140, 290, 56, ["Records excluded", "(n = " + val("screenExcluded") + ")"]);
+    svg += hArrow(340, 380, 168);
+    svg += arrow(195, 196, 232);
+    svg += box(50, 232, 290, 56, ["Reports sought for retrieval", "(n = " + sought + ")"]);
+    svg += box(380, 232, 290, 56, ["Reports not retrieved", "(n = " + val("notRetrieved") + ")"]);
+    svg += hArrow(340, 380, 260);
+    svg += arrow(195, 288, 324);
+    svg += box(50, 324, 290, 56, ["Reports assessed for eligibility", "(n = " + assessed + ")"]);
+    svg += box(380, 324, 290, exclH, exclLines);
+    svg += hArrow(340, 380, 352);
+    // Included row
+    svg += arrow(195, 380, 520);
+    svg += box(50, 520, 290, 72, ["Studies included in review", "(n = " + val("studiesIncluded") + ")", "Reports of included studies", "(n = " + val("reportsIncluded") + ")"], "#eef4fb");
+    svg += "</svg>";
+    document.getElementById("diagram").innerHTML = svg;
+  }
+
+  ids.forEach(function (id) { document.getElementById(id).addEventListener("input", render); });
+  document.getElementById("ftReasons").addEventListener("input", render);
+
+  document.getElementById("downloadBtn").addEventListener("click", function () {
+    var svgEl = document.getElementById("prismaSvg");
+    var xml = new XMLSerializer().serializeToString(svgEl);
+    var img = new Image();
+    img.onload = function () {
+      var scale = 3;
+      var canvas = document.createElement("canvas");
+      canvas.width = 700 * scale; canvas.height = 640 * scale;
+      var ctx = canvas.getContext("2d");
+      ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      var a = document.createElement("a");
+      a.download = "prisma-flow-diagram.png";
+      a.href = canvas.toDataURL("image/png");
+      a.click();
+    };
+    img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(xml);
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
