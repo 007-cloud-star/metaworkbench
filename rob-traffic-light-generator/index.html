@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RoB 2 Traffic Light Plot Generator — Free Online Risk of Bias Tool, No Sign-Up</title>
+<meta name="description" content="Free online RoB 2 traffic light plot generator. Enter per-domain risk-of-bias judgements for your trials and get robvis-style traffic-light and summary plots, with overall judgements by the RoB 2 rule and optional sample-size weighting. Download publication-ready PNGs. No sign-up, runs entirely in your browser.">
+<style>
+  body { font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin: 0; color: #1a1a1a; background: #fafafa; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 24px 16px 64px; }
+  h1 { font-size: 28px; margin: 8px 0 6px; }
+  h2 { font-size: 20px; margin: 32px 0 8px; }
+  p.lead { color: #444; font-size: 16px; line-height: 1.55; }
+  .grid { display: flex; gap: 24px; flex-wrap: wrap; align-items: flex-start; }
+  .panel { background: #fff; border: 1px solid #ddd; border-radius: 10px; padding: 16px 18px; width: 660px; box-sizing: border-box; }
+  .panel h3 { margin: 14px 0 6px; font-size: 15px; color: #0b5394; }
+  .panel h3:first-child { margin-top: 0; }
+  label { display: block; font-size: 13px; margin: 8px 0 2px; color: #333; }
+  select { width: 100%; padding: 6px 8px; font-size: 14px; border: 1px solid #bbb; border-radius: 6px; box-sizing: border-box; background: #fff; }
+  table.data { width: 100%; border-collapse: collapse; margin-top: 6px; }
+  table.data th { font-size: 12px; color: #555; text-align: left; padding: 2px 3px; font-weight: 600; }
+  table.data td { padding: 2px 3px; }
+  table.data input { width: 100%; padding: 5px 6px; font-size: 13px; border: 1px solid #bbb; border-radius: 6px; box-sizing: border-box; }
+  table.data input.num { text-align: right; }
+  table.data select { width: 100%; padding: 4px 2px; font-size: 12px; border: 1px solid #bbb; border-radius: 6px; box-sizing: border-box; background: #fff; }
+  .autoNote { font-size: 10.5px; color: #888; min-height: 12px; }
+  .del { background: none; border: 0; color: #b03a2e; font-size: 16px; cursor: pointer; padding: 2px 4px; margin: 0; }
+  .del:hover { background: none; color: #7b241c; }
+  textarea { width: 100%; padding: 6px 8px; font-size: 13px; border: 1px solid #bbb; border-radius: 6px; box-sizing: border-box; font-family: ui-monospace, Menlo, Consolas, monospace; }
+  .stack { flex: 1; min-width: 340px; display: flex; flex-direction: column; gap: 16px; }
+  .preview { background: #fff; border: 1px solid #ddd; border-radius: 10px; padding: 12px; box-sizing: border-box; }
+  .preview h3 { margin: 2px 0 8px; font-size: 15px; color: #0b5394; }
+  .preview svg { width: 100%; height: auto; }
+  button { background: #0b5394; color: #fff; border: 0; border-radius: 8px; padding: 10px 18px; font-size: 15px; cursor: pointer; margin-top: 12px; }
+  button:hover { background: #084a82; }
+  button.secondary { background: #eef4fb; color: #0b5394; border: 1px solid #0b5394; padding: 7px 12px; font-size: 13px; margin-top: 8px; }
+  button.secondary:hover { background: #dcebf8; }
+  .stats { background: #f7fafd; border: 1px solid #d7e5f2; border-radius: 8px; padding: 10px 14px; margin-top: 12px; font-size: 14px; line-height: 1.65; color: #222; }
+  .stats strong { color: #0b5394; }
+  .faq p, .howto li { line-height: 1.6; color: #333; }
+  .note { font-size: 13px; color: #666; }
+  .warn { font-size: 13px; color: #b03a2e; }
+  footer { margin-top: 48px; font-size: 13px; color: #777; border-top: 1px solid #e2e2e2; padding-top: 12px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>RoB 2 Traffic Light Plot Generator</h1>
+  <p class="lead">Turn your <strong>RoB 2</strong> judgements into the two figures journals expect: a <strong>traffic-light plot</strong> and a <strong>summary plot</strong>, in the robvis style. Enter each trial's five domain judgements — the overall judgement follows the RoB 2 rule automatically, and you can override it per study — then download publication-ready PNGs. Free, no sign-up, and everything runs locally (your data never leave your computer). 在浏览器本地运行，免费无水印。</p>
+
+  <div class="grid">
+    <div class="panel">
+      <h3>Summary plot weighting</h3>
+      <label>How the summary bars count studies</label>
+      <select id="weighting">
+        <option value="unweighted" selected>Unweighted — each study counts once</option>
+        <option value="weighted">Weighted by sample size (N)</option>
+      </select>
+
+      <h3>Studies &amp; domain judgements</h3>
+      <table class="data">
+        <thead><tr>
+          <th style="width:19%">Study</th><th style="width:9%">N</th>
+          <th title="D1. Randomization process">D1</th>
+          <th title="D2. Deviations from intended interventions">D2</th>
+          <th title="D3. Missing outcome data">D3</th>
+          <th title="D4. Measurement of the outcome">D4</th>
+          <th title="D5. Selection of the reported result">D5</th>
+          <th style="width:15%">Overall</th><th></th>
+        </tr></thead>
+        <tbody id="studyBody"></tbody>
+      </table>
+      <button class="secondary" id="addRowBtn" type="button">+ Add study</button>
+      <button class="secondary" id="demoBtn" type="button">Reload demo data</button>
+      <p class="warn" id="rowWarn"></p>
+      <p class="note">Overall defaults to <strong>Auto</strong> — the RoB 2 rule (worst domain wins). Pick Low / Some / High in the Overall column to fix a study's overall judgement yourself; the auto value is shown underneath whenever you do. A † next to a study means "some concerns" in 2+ domains: RoB 2 guidance allows considering an overall High there, but the tool never changes it silently.</p>
+
+      <h3>Paste CSV instead</h3>
+      <label>One study per line: <em>Study, N, D1, D2, D3, D4, D5</em> — judgements as Low / Some / High (an optional 8th column sets the Overall override; a header line is fine)</label>
+      <textarea id="csvBox" rows="5" placeholder="Study, N, D1, D2, D3, D4, D5&#10;Alvarez 2019, 412, Low, Low, Low, Low, Low"></textarea>
+      <button class="secondary" id="csvBtn" type="button">Import CSV</button>
+    </div>
+
+    <div class="stack">
+      <div class="preview">
+        <h3>Traffic light plot</h3>
+        <div id="trafficWrap"><div id="trafficPlot"></div></div>
+        <button id="downloadTrafficBtn" type="button">Download PNG</button>
+        <p class="note"><strong>D1</strong> Randomization process &middot; <strong>D2</strong> Deviations from intended interventions &middot; <strong>D3</strong> Missing outcome data &middot; <strong>D4</strong> Measurement of the outcome &middot; <strong>D5</strong> Selection of the reported result</p>
+      </div>
+      <div class="preview">
+        <h3>Summary plot</h3>
+        <div id="summaryWrap"><div id="summaryPlot"></div></div>
+        <button id="downloadSummaryBtn" type="button">Download PNG</button>
+        <div class="stats" id="infoBox"></div>
+      </div>
+    </div>
+  </div>
+
+  <h2>How the overall judgement works</h2>
+  <ol class="howto">
+    <li><strong>Worst domain wins.</strong> The overall judgement follows the RoB 2 algorithm: <em>High</em> risk in any one domain makes the study High overall; <em>Some concerns</em> in at least one domain (and no High) makes it Some concerns overall; Low in all five domains makes it Low overall.</li>
+    <li><strong>Multiple "some concerns" are flagged, never silently upgraded.</strong> RoB 2 guidance notes that when a study has some concerns in multiple domains, reviewers may judge it High overall if the concerns substantially lower confidence in the result. Studies in that situation are marked † in the plot and listed under the summary; use the Overall selector if you decide to raise one.</li>
+    <li><strong>Overrides are yours.</strong> The RoB 2 tool leaves the final call to the reviewer (for example, when a domain's concerns plainly do not threaten the result). Any override you set is used consistently in the traffic-light plot, the summary bars and the counts below them.</li>
+    <li><strong>Summary bars, two ways.</strong> Unweighted bars count each study once. Weighted bars let each study contribute in proportion to its sample size N — closer to how much evidence each judgement represents. Studies without an N are excluded from weighted bars, and the note under the plot says how many.</li>
+  </ol>
+
+  <h2>Frequently asked questions</h2>
+  <div class="faq">
+    <p><strong>Is this the official RoB 2 tool?</strong><br>No. This page only draws the plots (in the style of the robvis visualisations, McGuinness &amp; Higgins 2020) from judgements you enter. The judgements themselves come from answering the RoB 2 signalling questions for each trial (Sterne et al., BMJ 2019) — this tool does not assess your trials for you, and it is not affiliated with the RoB 2 developers.</p>
+    <p><strong>Which RoB 2 version does it cover?</strong><br>The standard version for individually randomised, parallel-group trials, with its five domains. The cluster-randomised and crossover variants add domains (e.g. timing of identification/recruitment) and are not covered yet.</p>
+    <p><strong>Why is there an Overall row in the summary plot?</strong><br>Journals commonly show the distribution of overall judgements alongside the domains. It pools each study's overall judgement — after any overrides you set — exactly like a domain row.</p>
+    <p><strong>Is this generator free?</strong><br>Yes. It is free to use and the PNG downloads carry no watermark and require no account.</p>
+    <p><strong>Is my data uploaded anywhere?</strong><br>No. Both plots are drawn locally in your browser; nothing is sent to a server.</p>
+  </div>
+
+  <footer>Meta Workbench — built by R. Dong, emergency physician &amp; systematic reviewer, Tianjin. <a href="../index.html">Back to all tools</a>. Tools are provided for research use; always verify figures against your own analysis before submission.</footer>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  // === ROB CORE START (pure functions, no DOM) ===
+  var DOMAINS = [
+    { short: "D1", name: "Randomization process" },
+    { short: "D2", name: "Deviations from intended interventions" },
+    { short: "D3", name: "Missing outcome data" },
+    { short: "D4", name: "Measurement of the outcome" },
+    { short: "D5", name: "Selection of the reported result" }
+  ];
+  var JUDGE = {
+    L: { label: "Low risk",      short: "Low",  color: "#00a651", tint: "#e3f4e8", symbol: "+" },
+    S: { label: "Some concerns", short: "Some", color: "#f2c500", tint: "#fdf3c4", symbol: "!" },
+    H: { label: "High risk",     short: "High", color: "#d92323", tint: "#f9dcdc", symbol: "\u00D7" }
+  };
+
+  // RoB 2 overall-judgement algorithm: worst domain wins.
+  // Returns { overall, scCount, raiseNote } — raiseNote is true when the study
+  // lands on "Some concerns" only because of 2+ some-concerns domains, the
+  // situation where RoB 2 guidance allows considering an overall High.
+  function computeOverall(domains) {
+    var sc = 0, i;
+    for (i = 0; i < domains.length; i++) {
+      if (domains[i] === "H") return { overall: "H", scCount: sc, raiseNote: false };
+      if (domains[i] === "S") sc++;
+    }
+    if (sc > 0) return { overall: "S", scCount: sc, raiseNote: sc >= 2 };
+    return { overall: "L", scCount: 0, raiseNote: false };
+  }
+
+  function parseJudgment(tok) {
+    if (tok == null) return null;
+    var t = String(tok).trim().toLowerCase();
+    if (t === "l" || t === "low" || t === "low risk" || t === "+") return "L";
+    if (t === "s" || t === "sc" || t === "some" || t === "some concern" || t === "some concerns" || t === "!") return "S";
+    if (t === "h" || t === "high" || t === "high risk" || t === "\u00D7" || t === "x") return "H";
+    return null;
+  }
+
+  // studies: [{ name, n (number|null), domains: [5 x "L"|"S"|"H"], overall: effective "L"|"S"|"H" }]
+  // Returns one row per domain plus a final Overall row:
+  // { key, label, counts: {L,S,H}, denom, pL, pS, pH } with proportions in %.
+  // Weighted: each study contributes its N; studies without N are excluded
+  // (count reported in `excluded`). If no study has an N, weighted falls back
+  // to unweighted and `fellBack` is true.
+  function summarize(studies, weighted) {
+    var useW = !!weighted, excluded = 0, fellBack = false, i;
+    if (useW) {
+      var anyN = false;
+      for (i = 0; i < studies.length; i++) if (studies[i].n != null) { anyN = true; break; }
+      if (!anyN) { useW = false; fellBack = true; }
+    }
+    function tally(get) {
+      var c = { L: 0, S: 0, H: 0 }, denom = 0;
+      studies.forEach(function (s) {
+        var wgt = 1;
+        if (useW) {
+          if (s.n == null) return;
+          wgt = s.n;
+        }
+        c[get(s)] += wgt; denom += wgt;
+      });
+      return { counts: c, denom: denom };
+    }
+    var rows = DOMAINS.map(function (d, di) {
+      var t = tally(function (s) { return s.domains[di]; });
+      return { key: d.short, label: d.short + " \u00B7 " + d.name, counts: t.counts, denom: t.denom };
+    });
+    var to = tally(function (s) { return s.overall; });
+    rows.push({ key: "Overall", label: "Overall", counts: to.counts, denom: to.denom });
+    rows.forEach(function (r) {
+      r.pL = r.denom > 0 ? 100 * r.counts.L / r.denom : 0;
+      r.pS = r.denom > 0 ? 100 * r.counts.S / r.denom : 0;
+      r.pH = r.denom > 0 ? 100 * r.counts.H / r.denom : 0;
+    });
+    if (useW) studies.forEach(function (s) { if (s.n == null) excluded++; });
+    return { rows: rows, weighted: useW, excluded: excluded, fellBack: fellBack };
+  }
+  // === ROB CORE END ===
+
+  var DEMO = [
+    // name, N, D1..D5
+    ["Alvarez 2019", 412, "L", "L", "L", "L", "L"],
+    ["Chen 2020",    268, "L", "S", "L", "L", "L"],
+    ["Okafor 2021",  534, "L", "L", "L", "S", "L"],
+    ["Novak 2018",   189, "S", "L", "S", "L", "L"],
+    ["Singh 2022",   726, "L", "L", "H", "L", "S"],
+    ["Meyer 2023",   358, "L", "S", "L", "S", "S"],
+    ["Petrova 2020", 145, "H", "L", "L", "L", "L"]
+  ];
+
+  var body = document.getElementById("studyBody");
+
+  function judgeOptions(sel) {
+    return '<option value="L"' + (sel === "L" ? " selected" : "") + '>Low</option>' +
+           '<option value="S"' + (sel === "S" ? " selected" : "") + '>Some</option>' +
+           '<option value="H"' + (sel === "H" ? " selected" : "") + '>High</option>';
+  }
+  function addRow(name, n, doms, ov) {
+    doms = doms || ["L", "L", "L", "L", "L"];
+    var tr = document.createElement("tr");
+    var cells = '<td><input type="text" class="f-name"></td>' +
+      '<td><input type="number" class="f-n num" min="0" step="any"></td>';
+    for (var d = 0; d < 5; d++) {
+      cells += '<td><select class="f-d' + (d + 1) + '">' + judgeOptions(doms[d]) + "</select></td>";
+    }
+    cells += '<td><select class="f-ov"><option value="">Auto</option>' + judgeOptions(ov || "") + '</select><div class="autoNote"></div></td>' +
+      '<td><button type="button" class="del" title="Remove row">&times;</button></td>';
+    tr.innerHTML = cells;
+    tr.querySelector(".f-name").value = name == null ? "" : name;
+    tr.querySelector(".f-n").value = n == null ? "" : n;
+    tr.querySelector(".del").addEventListener("click", function () { tr.remove(); render(); });
+    tr.querySelectorAll("input, select").forEach(function (el) {
+      el.addEventListener("input", render);
+      el.addEventListener("change", render);
+    });
+    body.appendChild(tr);
+  }
+  function loadDemo() {
+    body.innerHTML = "";
+    DEMO.forEach(function (r) { addRow(r[0], r[1], r.slice(2, 7), ""); });
+    render();
+  }
+
+  function readStudies() {
+    var out = [];
+    body.querySelectorAll("tr").forEach(function (tr, idx) {
+      var name = tr.querySelector(".f-name").value.trim() || ("Study " + (idx + 1));
+      var nRaw = parseFloat(tr.querySelector(".f-n").value);
+      var n = (isNaN(nRaw) || nRaw <= 0) ? null : nRaw;
+      var doms = [];
+      for (var d = 0; d < 5; d++) doms.push(tr.querySelector(".f-d" + (d + 1)).value);
+      var ov = tr.querySelector(".f-ov").value || null;
+      var auto = computeOverall(doms);
+      out.push({
+        name: name, n: n, domains: doms,
+        auto: auto.overall, raiseNote: auto.raiseNote, scCount: auto.scCount,
+        override: ov, overall: ov || auto.overall,
+        _tr: tr
+      });
+    });
+    return out;
+  }
+
+  function fmt(x, d) { return isFinite(x) ? x.toFixed(d == null ? 1 : d) : "\u2014"; }
+  function esc(t) { return String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+
+  function circle(cx, cy, j, r) {
+    return '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="' + JUDGE[j].color + '"/>' +
+      '<text x="' + cx + '" y="' + (cy + r * 0.38) + '" text-anchor="middle" font-size="' + (r * 1.15) + '" font-weight="bold" fill="#111">' + JUDGE[j].symbol + "</text>";
+  }
+
+  function renderTraffic(studies) {
+    var el = document.getElementById("trafficPlot"), wrap = document.getElementById("trafficWrap");
+    if (!studies.length) {
+      el.innerHTML = '<p class="note">Add at least one study to draw the plot.</p>';
+      wrap.dataset.height = 60; return;
+    }
+    var W = 1000, headH = 48, rowH = 36, firstCY = headH + rowH / 2;
+    var H = headH + studies.length * rowH + 40;
+    var colX = [395, 490, 585, 680, 775], ovX = 898;
+    var s = '<svg id="robTrafficSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + W + " " + H + '">';
+    s += '<rect x="0" y="0" width="' + W + '" height="' + H + '" fill="#ffffff"/>';
+    s += '<text x="262" y="28" text-anchor="end" font-size="14" font-weight="bold" fill="#111">Study</text>';
+    s += '<text x="322" y="28" text-anchor="end" font-size="14" font-weight="bold" fill="#111">N</text>';
+    colX.forEach(function (x, i) {
+      s += '<text x="' + x + '" y="28" text-anchor="middle" font-size="14" font-weight="bold" fill="#111">' + DOMAINS[i].short + "</text>";
+    });
+    s += '<text x="' + ovX + '" y="28" text-anchor="middle" font-size="14" font-weight="bold" fill="#111">Overall</text>';
+    s += '<line x1="0" y1="38" x2="' + W + '" y2="38" stroke="#333" stroke-width="1.2"/>';
+    s += '<line x1="338" y1="42" x2="338" y2="' + (H - 44) + '" stroke="#e2e2e2" stroke-width="1"/>';
+    s += '<line x1="832" y1="42" x2="832" y2="' + (H - 44) + '" stroke="#ccc" stroke-width="1"/>';
+    studies.forEach(function (st, idx) {
+      var cy = firstCY + idx * rowH;
+      s += '<text x="262" y="' + (cy + 5) + '" text-anchor="end" font-size="13.5" fill="#111">' + esc(st.name) + "</text>";
+      s += '<text x="322" y="' + (cy + 5) + '" text-anchor="end" font-size="12.5" fill="#555">' + (st.n == null ? "" : st.n) + "</text>";
+      st.domains.forEach(function (j, di) { s += circle(colX[di], cy, j, 13.5); });
+      s += circle(ovX, cy, st.overall, 13.5);
+      if (!st.override && st.raiseNote) {
+        s += '<text x="' + (ovX + 19) + '" y="' + (cy + 5) + '" font-size="14" font-weight="bold" fill="#b03a2e">\u2020</text>';
+      }
+    });
+    // legend
+    var ly = H - 14, lx = 0;
+    ["L", "S", "H"].forEach(function (j) {
+      s += circle(lx + 8, ly - 4, j, 7.5);
+      s += '<text x="' + (lx + 22) + '" y="' + ly + '" font-size="12.5" fill="#333">' + JUDGE[j].label + "</text>";
+      lx += j === "L" ? 110 : (j === "S" ? 140 : 110);
+    });
+    if (studies.some(function (st) { return !st.override && st.raiseNote; })) {
+      s += '<text x="' + W + '" y="' + ly + '" text-anchor="end" font-size="12.5" fill="#b03a2e">\u2020 some concerns in 2+ domains \u2014 see notes</text>';
+    }
+    s += "</svg>";
+    el.innerHTML = s;
+    wrap.dataset.height = H;
+  }
+
+  function renderSummary(studies, weighted) {
+    var el = document.getElementById("summaryPlot"), wrap = document.getElementById("summaryWrap");
+    if (!studies.length) {
+      el.innerHTML = '<p class="note">Add at least one study to draw the plot.</p>';
+      wrap.dataset.height = 60; return { rows: [], weighted: false, excluded: 0, fellBack: false };
+    }
+    var S = summarize(studies, weighted);
+    var W = 1000, headH = 46, rowH = 36, barH = 22, barX0 = 312, barX1 = 936;
+    var axisY = headH + S.rows.length * rowH + 6;
+    var H = axisY + 26;
+    var s = '<svg id="robSummarySvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + W + " " + H + '">';
+    s += '<rect x="0" y="0" width="' + W + '" height="' + H + '" fill="#ffffff"/>';
+    // legend + mode note
+    var lx = 0, ly = 18;
+    ["L", "S", "H"].forEach(function (j) {
+      s += '<rect x="' + lx + '" y="' + (ly - 10) + '" width="14" height="14" fill="' + JUDGE[j].color + '"/>';
+      s += '<text x="' + (lx + 20) + '" y="' + (ly + 2) + '" font-size="12.5" fill="#333">' + JUDGE[j].label + "</text>";
+      lx += j === "L" ? 100 : (j === "S" ? 140 : 100);
+    });
+    var modeTxt = S.weighted ? "Weighted by sample size (total N = " + S.rows[0].denom + ")" : "Unweighted (k = " + studies.length + ")";
+    if (S.fellBack) modeTxt = "Unweighted (k = " + studies.length + ") \u2014 no N entered, weighting unavailable";
+    s += '<text x="' + W + '" y="' + (ly + 2) + '" text-anchor="end" font-size="12.5" fill="#555">' + modeTxt + "</text>";
+    // gridlines + ticks
+    [0, 25, 50, 75, 100].forEach(function (p) {
+      var x = barX0 + (barX1 - barX0) * p / 100;
+      s += '<line x1="' + x + '" y1="' + headH + '" x2="' + x + '" y2="' + axisY + '" stroke="#eee" stroke-width="1"/>';
+      s += '<text x="' + x + '" y="' + (axisY + 18) + '" text-anchor="middle" font-size="12" fill="#555">' + p + "%</text>";
+    });
+    S.rows.forEach(function (r, i) {
+      var y = headH + i * rowH, cy = y + rowH / 2;
+      if (r.key === "Overall") {
+        s += '<line x1="0" y1="' + y + '" x2="' + W + '" y2="' + y + '" stroke="#ccc" stroke-width="1"/>';
+      }
+      s += '<text x="296" y="' + (cy + 5) + '" text-anchor="end" font-size="13.5"' + (r.key === "Overall" ? ' font-weight="bold"' : "") + ' fill="#111">' + esc(r.label) + "</text>";
+      var x = barX0;
+      [["L", r.pL], ["S", r.pS], ["H", r.pH]].forEach(function (seg) {
+        var w = (barX1 - barX0) * seg[1] / 100;
+        if (w > 0) {
+          s += '<rect x="' + x + '" y="' + (cy - barH / 2) + '" width="' + w + '" height="' + barH + '" fill="' + JUDGE[seg[0]].color + '"/>';
+          if (w >= 36) {
+            s += '<text x="' + (x + w / 2) + '" y="' + (cy + 4.5) + '" text-anchor="middle" font-size="12" font-weight="bold" fill="#111">' + fmt(seg[1], 1) + "%</text>";
+          }
+        }
+        x += w;
+      });
+    });
+    s += '<line x1="' + barX0 + '" y1="' + axisY + '" x2="' + barX1 + '" y2="' + axisY + '" stroke="#333" stroke-width="1.2"/>';
+    s += "</svg>";
+    el.innerHTML = s;
+    wrap.dataset.height = H;
+    return S;
+  }
+
+  function render() {
+    var studies = readStudies();
+    // table feedback: select tints + auto notes
+    studies.forEach(function (st) {
+      var tr = st._tr;
+      for (var d = 0; d < 5; d++) {
+        tr.querySelector(".f-d" + (d + 1)).style.background = JUDGE[st.domains[d]].tint;
+      }
+      var ovSel = tr.querySelector(".f-ov");
+      ovSel.style.background = JUDGE[st.overall].tint;
+      tr.querySelector(".autoNote").textContent = st.override ? ("auto: " + JUDGE[st.auto].short) : "";
+    });
+    document.getElementById("rowWarn").textContent = "";
+    renderTraffic(studies);
+    var weighted = document.getElementById("weighting").value === "weighted";
+    var S = renderSummary(studies, weighted);
+
+    // ---- info box ----
+    var info = document.getElementById("infoBox");
+    if (!studies.length) { info.innerHTML = ""; return; }
+    var ov = { L: 0, S: 0, H: 0 };
+    studies.forEach(function (st) { ov[st.overall]++; });
+    var k = studies.length;
+    var html = "<strong>Overall judgements</strong> (k = " + k + "): " +
+      "Low risk " + ov.L + " (" + fmt(100 * ov.L / k, 1) + "%) \u00B7 " +
+      "Some concerns " + ov.S + " (" + fmt(100 * ov.S / k, 1) + "%) \u00B7 " +
+      "High risk " + ov.H + " (" + fmt(100 * ov.H / k, 1) + "%)<br>";
+    html += "<strong>Domain counts</strong> (Low / Some / High" + (S.weighted ? ", N-weighted sums" : "") + "): " + S.rows.slice(0, 5).map(function (r) {
+      return r.key + " " + (S.weighted ? fmt(r.counts.L, 0) + "/" + fmt(r.counts.S, 0) + "/" + fmt(r.counts.H, 0) : r.counts.L + "/" + r.counts.S + "/" + r.counts.H);
+    }).join(" \u00B7 ") + "<br>";
+    var flagged = studies.filter(function (st) { return !st.override && st.raiseNote; });
+    flagged.forEach(function (st) {
+      html += "<strong>\u2020 " + esc(st.name) + ":</strong> some concerns in " + st.scCount + " domains, no domain at high risk. RoB 2 guidance allows considering an overall <em>High</em> judgement here; the plots keep Some concerns unless you override it.<br>";
+    });
+    var manual = studies.filter(function (st) { return st.override && st.override !== st.auto; });
+    manual.forEach(function (st) {
+      html += "<strong>" + esc(st.name) + ":</strong> overall set manually to " + JUDGE[st.overall].label + " (the RoB 2 rule alone would give " + JUDGE[st.auto].label + ").<br>";
+    });
+    if (S.weighted && S.excluded > 0) {
+      html += "<strong>Weighting:</strong> " + S.excluded + " of " + k + " studies have no N and are excluded from the weighted summary bars.<br>";
+    }
+    if (S.fellBack) {
+      html += "<strong>Weighting:</strong> weighted mode needs an N for at least one study; showing unweighted bars.<br>";
+    }
+    info.innerHTML = html;
+  }
+
+  function downloadPng(svgId, wrapId, filename) {
+    var svgEl = document.getElementById(svgId);
+    if (!svgEl) return;
+    var H = parseInt(document.getElementById(wrapId).dataset.height, 10) || 400;
+    var xml = new XMLSerializer().serializeToString(svgEl);
+    var img = new Image();
+    img.onload = function () {
+      var scale = 3;
+      var canvas = document.createElement("canvas");
+      canvas.width = 1000 * scale; canvas.height = H * scale;
+      var ctx = canvas.getContext("2d");
+      ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      var a = document.createElement("a");
+      a.download = filename;
+      a.href = canvas.toDataURL("image/png");
+      a.click();
+    };
+    img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(xml);
+  }
+
+  document.getElementById("addRowBtn").addEventListener("click", function () { addRow("", "", null, ""); });
+  document.getElementById("demoBtn").addEventListener("click", loadDemo);
+  document.getElementById("weighting").addEventListener("change", render);
+  document.getElementById("csvBtn").addEventListener("click", function () {
+    var lines = document.getElementById("csvBox").value.split(/\r?\n/), rows = [];
+    lines.forEach(function (line) {
+      line = line.trim(); if (!line) return;
+      var parts = line.indexOf("\t") >= 0 ? line.split("\t") : (line.indexOf(";") >= 0 ? line.split(";") : line.split(","));
+      parts = parts.map(function (p) { return p.trim().replace(/^"|"$/g, ""); });
+      if (parts.length < 7) return;
+      var doms = [], ok = true;
+      for (var d = 0; d < 5; d++) {
+        var j = parseJudgment(parts[2 + d]);
+        if (!j) { ok = false; break; }
+        doms.push(j);
+      }
+      if (!ok) return; // header or junk line
+      var n = parseFloat(parts[1]);
+      var ov = parts.length >= 8 ? (parseJudgment(parts[7]) || "") : "";
+      rows.push([parts[0], isNaN(n) ? "" : n, doms, ov]);
+    });
+    if (rows.length) {
+      body.innerHTML = "";
+      rows.forEach(function (r) { addRow(r[0], r[1], r[2], r[3]); });
+      render();
+    }
+  });
+  document.getElementById("downloadTrafficBtn").addEventListener("click", function () {
+    downloadPng("robTrafficSvg", "trafficWrap", "rob2-traffic-light.png");
+  });
+  document.getElementById("downloadSummaryBtn").addEventListener("click", function () {
+    downloadPng("robSummarySvg", "summaryWrap", "rob2-summary-plot.png");
+  });
+
+  loadDemo();
+})();
+</script>
+</body>
+</html>
