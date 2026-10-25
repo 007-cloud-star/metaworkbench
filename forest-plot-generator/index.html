@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Forest Plot Generator — Free Online Meta-Analysis Tool, No Sign-Up</title>
+<meta name="description" content="Free online forest plot generator for meta-analysis. Paste study-level effect sizes, get fixed-effect and DerSimonian–Laird random-effects pooling with I² and τ², and download a publication-ready PNG. No sign-up, runs entirely in your browser.">
+<style>
+  body { font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin: 0; color: #1a1a1a; background: #fafafa; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 24px 16px 64px; }
+  h1 { font-size: 28px; margin: 8px 0 6px; }
+  h2 { font-size: 20px; margin: 32px 0 8px; }
+  p.lead { color: #444; font-size: 16px; line-height: 1.55; }
+  .grid { display: flex; gap: 24px; flex-wrap: wrap; align-items: flex-start; }
+  .panel { background: #fff; border: 1px solid #ddd; border-radius: 10px; padding: 16px 18px; width: 452px; box-sizing: border-box; }
+  .panel h3 { margin: 14px 0 6px; font-size: 15px; color: #0b5394; }
+  .panel h3:first-child { margin-top: 0; }
+  label { display: block; font-size: 13px; margin: 8px 0 2px; color: #333; }
+  select { width: 100%; padding: 6px 8px; font-size: 14px; border: 1px solid #bbb; border-radius: 6px; box-sizing: border-box; background: #fff; }
+  table.data { width: 100%; border-collapse: collapse; margin-top: 6px; }
+  table.data th { font-size: 12px; color: #555; text-align: left; padding: 2px 3px; font-weight: 600; }
+  table.data td { padding: 2px 3px; }
+  table.data input { width: 100%; padding: 5px 6px; font-size: 13px; border: 1px solid #bbb; border-radius: 6px; box-sizing: border-box; }
+  table.data input.num { text-align: right; }
+  .del { background: none; border: 0; color: #b03a2e; font-size: 16px; cursor: pointer; padding: 2px 4px; margin: 0; }
+  .del:hover { background: none; color: #7b241c; }
+  textarea { width: 100%; padding: 6px 8px; font-size: 13px; border: 1px solid #bbb; border-radius: 6px; box-sizing: border-box; font-family: ui-monospace, Menlo, Consolas, monospace; }
+  .preview { flex: 1; min-width: 340px; background: #fff; border: 1px solid #ddd; border-radius: 10px; padding: 12px; box-sizing: border-box; }
+  .preview svg { width: 100%; height: auto; }
+  button { background: #0b5394; color: #fff; border: 0; border-radius: 8px; padding: 10px 18px; font-size: 15px; cursor: pointer; margin-top: 12px; }
+  button:hover { background: #084a82; }
+  button.secondary { background: #eef4fb; color: #0b5394; border: 1px solid #0b5394; padding: 7px 12px; font-size: 13px; margin-top: 8px; }
+  button.secondary:hover { background: #dcebf8; }
+  .stats { background: #f7fafd; border: 1px solid #d7e5f2; border-radius: 8px; padding: 10px 14px; margin-top: 12px; font-size: 14px; line-height: 1.65; color: #222; }
+  .stats strong { color: #0b5394; }
+  .faq p, .howto li { line-height: 1.6; color: #333; }
+  .note { font-size: 13px; color: #666; }
+  .warn { font-size: 13px; color: #b03a2e; }
+  footer { margin-top: 48px; font-size: 13px; color: #777; border-top: 1px solid #e2e2e2; padding-top: 12px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Forest Plot Generator</h1>
+  <p class="lead">Build a <strong>forest plot</strong> for your meta-analysis in your browser. Enter each study's effect size and 95% confidence interval — the plot and the pooled results update live — then download a publication-ready PNG. Pooling is by inverse variance: fixed-effect, plus DerSimonian–Laird random-effects with Cochran's Q, I² and τ². Free, no sign-up, and everything runs locally (your numbers never leave your computer). 在浏览器本地运行，免费无水印。</p>
+
+  <div class="grid">
+    <div class="panel">
+      <h3>Effect measure</h3>
+      <label>Measure (ratio measures are pooled on the log scale)</label>
+      <select id="measure">
+        <option value="OR" selected>Odds ratio (OR)</option>
+        <option value="RR">Risk ratio (RR)</option>
+        <option value="MD">Mean difference (MD)</option>
+        <option value="SMD">Standardised mean difference (SMD)</option>
+      </select>
+      <label>Model shown in the plot</label>
+      <select id="model">
+        <option value="both" selected>Both fixed &amp; random</option>
+        <option value="fixed">Fixed-effect only</option>
+        <option value="random">Random-effects only</option>
+      </select>
+
+      <h3>Studies</h3>
+      <table class="data">
+        <thead><tr><th style="width:34%">Study</th><th>Effect</th><th>Lower 95% CI</th><th>Upper 95% CI</th><th></th></tr></thead>
+        <tbody id="studyBody"></tbody>
+      </table>
+      <button class="secondary" id="addRowBtn" type="button">+ Add study</button>
+      <button class="secondary" id="demoBtn" type="button">Reload demo data</button>
+      <p class="warn" id="rowWarn"></p>
+
+      <h3>Paste CSV instead</h3>
+      <label>One study per line: <em>Study, Effect, Lower, Upper</em> (a header line is fine)</label>
+      <textarea id="csvBox" rows="5" placeholder="Study, Effect, Lower, Upper&#10;Alvarez 2019, 0.55, 0.38, 0.80"></textarea>
+      <button class="secondary" id="csvBtn" type="button">Import CSV</button>
+    </div>
+
+    <div class="preview">
+      <div id="plot"></div>
+      <div class="stats" id="statsBox"></div>
+      <button id="downloadBtn" type="button">Download PNG</button>
+      <p class="note">Tip: square sizes and the Weight column follow the model selected on the left (random-effects weights when "Both" is chosen). The pooling code on this page was cross-checked against an independent Python (numpy/scipy) calculation before release — see the numbers in the box above against your own software before you submit.</p>
+    </div>
+  </div>
+
+  <h2>How the pooling works</h2>
+  <ol class="howto">
+    <li><strong>Standard errors from your CIs.</strong> Each study's standard error is recovered from its 95% CI: SE = (upper − lower) / (2 × 1.96), computed on the log scale for odds and risk ratios, and on the raw scale for mean differences.</li>
+    <li><strong>Fixed-effect.</strong> Studies are weighted by the inverse of their variance (w = 1/SE²). The pooled estimate is the weighted mean, with SE = √(1/Σw).</li>
+    <li><strong>Heterogeneity.</strong> Cochran's Q is the weighted sum of squared deviations from the fixed-effect estimate. I² expresses the share of variation due to heterogeneity rather than chance, and the DerSimonian–Laird estimator turns the excess of Q over its degrees of freedom into τ², the between-study variance.</li>
+    <li><strong>Random-effects.</strong> Each study's variance is inflated by τ² (w* = 1/(SE² + τ²)) and the weighted mean is recomputed. When τ² = 0 the two models coincide.</li>
+  </ol>
+
+  <h2>Frequently asked questions</h2>
+  <div class="faq">
+    <p><strong>Which effect measures are supported?</strong><br>Odds ratios and risk ratios (pooled on the log scale, null line at 1) and mean differences / standardised mean differences (pooled on the raw scale, null line at 0). Enter the effect and its 95% CI exactly as reported by your study or your extraction sheet.</p>
+    <p><strong>Fixed-effect or random-effects — which should I report?</strong><br>That is a design decision, not a software default: fixed-effect assumes one true effect; random-effects allows the true effect to vary between studies and is the usual choice when populations or protocols differ. This tool shows both, plus I² and τ², so you can justify your choice. Pre-specify the primary model in your protocol.</p>
+    <p><strong>Is this generator free?</strong><br>Yes. It is free to use and the PNG download carries no watermark and requires no account.</p>
+    <p><strong>Is my data uploaded anywhere?</strong><br>No. The plot is drawn locally in your browser; nothing is sent to a server.</p>
+    <p><strong>Can I trust the numbers?</strong><br>The statistics were validated against an independent Python implementation (numpy/scipy hand formulas) on the preloaded demo dataset, matching to at least three significant figures. Even so, always verify pooled figures against your primary analysis software before submission — this tool is a drafting and checking aid, not a replacement for your registered analysis plan.</p>
+  </div>
+
+  <footer>Meta Workbench — built by R. Dong, emergency physician &amp; systematic reviewer, Tianjin. <a href="../index.html">Back to all tools</a>. Tools are provided for research use; always verify figures against your own analysis before submission.</footer>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  // === STATS CORE START (pure functions, no DOM — validated against Python) ===
+  var Z975 = 1.959963984540054;
+  function gammln(xx) {
+    var cof = [76.18009172947146, -86.50532032941677, 24.01409824083091,
+               -1.231739572450155, 0.001208650973866179, -0.000005395239384953];
+    var x = xx, y = xx, tmp = x + 5.5, ser = 1.000000000190015, j;
+    tmp -= (x + 0.5) * Math.log(tmp);
+    for (j = 0; j < 6; j++) { ser += cof[j] / ++y; }
+    return -tmp + Math.log(2.5066282746310005 * ser / x);
+  }
+  function gammaPSeries(a, x) { // regularised lower incomplete gamma, series
+    var ap = a, sum = 1 / a, del = sum, n;
+    for (n = 0; n < 500; n++) {
+      ap += 1; del *= x / ap; sum += del;
+      if (Math.abs(del) < Math.abs(sum) * 1e-14) break;
+    }
+    return sum * Math.exp(-x + a * Math.log(x) - gammln(a));
+  }
+  function gammaQCf(a, x) { // regularised upper incomplete gamma, continued fraction
+    var tiny = 1e-300, b = x + 1 - a, c = 1 / tiny, d = 1 / b, h = d, i;
+    for (i = 1; i < 500; i++) {
+      var an = -i * (i - a);
+      b += 2; d = an * d + b; if (Math.abs(d) < tiny) d = tiny;
+      c = b + an / c; if (Math.abs(c) < tiny) c = tiny;
+      d = 1 / d; var del = d * c; h *= del;
+      if (Math.abs(del - 1) < 1e-14) break;
+    }
+    return Math.exp(-x + a * Math.log(x) - gammln(a)) * h;
+  }
+  function gammaQ(a, x) {
+    if (x < 0 || a <= 0) return NaN;
+    if (x === 0) return 1;
+    return x < a + 1 ? 1 - gammaPSeries(a, x) : gammaQCf(a, x);
+  }
+  function chiSquareSf(q, df) { return gammaQ(df / 2, q / 2); }
+  function normTwoSidedP(z) { // two-sided normal tail = chi-square(1) survival at z^2
+    return gammaQ(0.5, z * z / 2);
+  }
+
+  // studies: [{name, eff, lo, hi}] on the reported scale.
+  // logScale: pool log(effect). Returns analysis-scale + reported-scale results.
+  function analyse(studies, logScale) {
+    var pts = studies.map(function (s) {
+      var th = logScale ? Math.log(s.eff) : s.eff;
+      var l = logScale ? Math.log(s.lo) : s.lo;
+      var u = logScale ? Math.log(s.hi) : s.hi;
+      var se = (u - l) / (2 * Z975);
+      return { name: s.name, eff: s.eff, lo: s.lo, hi: s.hi, theta: th, se: se, v: se * se };
+    });
+    var k = pts.length, i;
+    var sw = 0, swt = 0;
+    for (i = 0; i < k; i++) { var w = 1 / pts[i].v; pts[i].wF = w; sw += w; swt += w * pts[i].theta; }
+    var estF = swt / sw, seF = Math.sqrt(1 / sw);
+    var Q = 0, sw2 = 0;
+    for (i = 0; i < k; i++) { Q += pts[i].wF * Math.pow(pts[i].theta - estF, 2); sw2 += pts[i].wF * pts[i].wF; }
+    var df = k - 1;
+    var pQ = df > 0 ? chiSquareSf(Q, df) : NaN;
+    var I2 = (df > 0 && Q > 0) ? Math.max(0, (Q - df) / Q) * 100 : 0;
+    var C = sw - sw2 / sw;
+    var tau2 = (df > 0 && C > 0) ? Math.max(0, (Q - df) / C) : 0;
+    var swr = 0, swrt = 0;
+    for (i = 0; i < k; i++) { pts[i].wR = 1 / (pts[i].v + tau2); swr += pts[i].wR; swrt += pts[i].wR * pts[i].theta; }
+    var estR = swrt / swr, seR = Math.sqrt(1 / swr);
+    for (i = 0; i < k; i++) { pts[i].wPctF = 100 * pts[i].wF / sw; pts[i].wPctR = 100 * pts[i].wR / swr; }
+    function pack(est, se) {
+      var z = est / se;
+      var back = function (x) { return logScale ? Math.exp(x) : x; };
+      return { est: back(est), lo: back(est - Z975 * se), hi: back(est + Z975 * se),
+               estA: est, seA: se, z: z, p: normTwoSidedP(z) };
+    }
+    return { studies: pts, k: k, fixed: pack(estF, seF), random: pack(estR, seR),
+             Q: Q, df: df, pQ: pQ, I2: I2, tau2: tau2 };
+  }
+  // === STATS CORE END ===
+
+  var DEMO = [
+    ["Alvarez 2019", 0.55, 0.38, 0.80],
+    ["Chen 2020", 0.92, 0.68, 1.24],
+    ["Okafor 2021", 0.64, 0.41, 0.99],
+    ["Novak 2018", 1.08, 0.79, 1.48],
+    ["Singh 2022", 0.78, 0.60, 1.01],
+    ["Meyer 2023", 0.83, 0.66, 1.04]
+  ];
+  var MEASURES = {
+    OR:  { log: true,  long: "Odds Ratio",               short: "OR" },
+    RR:  { log: true,  long: "Risk Ratio",               short: "RR" },
+    MD:  { log: false, long: "Mean Difference",          short: "MD" },
+    SMD: { log: false, long: "Std. Mean Difference",     short: "SMD" }
+  };
+
+  var body = document.getElementById("studyBody");
+
+  function addRow(name, eff, lo, hi) {
+    var tr = document.createElement("tr");
+    tr.innerHTML = '<td><input type="text" class="f-name"></td>' +
+      '<td><input type="number" class="f-eff num" step="any"></td>' +
+      '<td><input type="number" class="f-lo num" step="any"></td>' +
+      '<td><input type="number" class="f-hi num" step="any"></td>' +
+      '<td><button type="button" class="del" title="Remove row">&times;</button></td>';
+    tr.querySelector(".f-name").value = name;
+    tr.querySelector(".f-eff").value = eff;
+    tr.querySelector(".f-lo").value = lo;
+    tr.querySelector(".f-hi").value = hi;
+    tr.querySelector(".del").addEventListener("click", function () { tr.remove(); render(); });
+    tr.querySelectorAll("input").forEach(function (inp) { inp.addEventListener("input", render); });
+    body.appendChild(tr);
+  }
+  function loadDemo() {
+    body.innerHTML = "";
+    DEMO.forEach(function (r) { addRow(r[0], r[1], r[2], r[3]); });
+    render();
+  }
+
+  function readStudies(logScale) {
+    var out = [], bad = 0;
+    body.querySelectorAll("tr").forEach(function (tr) {
+      var name = tr.querySelector(".f-name").value.trim();
+      var eff = parseFloat(tr.querySelector(".f-eff").value);
+      var lo = parseFloat(tr.querySelector(".f-lo").value);
+      var hi = parseFloat(tr.querySelector(".f-hi").value);
+      if (name === "" && isNaN(eff) && isNaN(lo) && isNaN(hi)) return; // untouched blank row
+      if (isNaN(eff) || isNaN(lo) || isNaN(hi) || !(lo < hi) || (logScale && (eff <= 0 || lo <= 0 || hi <= 0))) { bad++; return; }
+      out.push({ name: name || "Study", eff: eff, lo: lo, hi: hi });
+    });
+    return { studies: out, bad: bad };
+  }
+
+  function fmt(x, d) {
+    if (!isFinite(x)) return "—";
+    var s = x.toFixed(d == null ? 2 : d);
+    return s;
+  }
+  function fmtP(p) {
+    if (!isFinite(p)) return "—";
+    if (p < 0.001) return "&lt;0.001";
+    return p.toFixed(3);
+  }
+  function esc(t) { return String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+
+  function niceTicksLinear(lo, hi) {
+    var range = hi - lo, rough = range / 5, mag = Math.pow(10, Math.floor(Math.log10(rough)));
+    var norm = rough / mag, step;
+    if (norm < 1.5) step = mag; else if (norm < 3.5) step = 2 * mag; else if (norm < 7.5) step = 5 * mag; else step = 10 * mag;
+    var ticks = [], t = Math.ceil(lo / step) * step;
+    for (; t <= hi + 1e-12; t += step) ticks.push(parseFloat(t.toPrecision(10)));
+    return ticks;
+  }
+  function ticksLog(lo, hi) { // lo, hi are display-scale values
+    var ticks = [], e, cand = Math.log10(hi / lo) > 2 ? [1, 2, 5] : [1, 1.5, 2, 3, 5, 7.5];
+    for (e = -4; e <= 4; e++) {
+      for (var j = 0; j < cand.length; j++) {
+        var v = cand[j] * Math.pow(10, e);
+        if (v >= lo && v <= hi) ticks.push(parseFloat(v.toPrecision(3)));
+      }
+    }
+    if (ticks.indexOf(1) === -1 && lo < 1 && hi > 1) ticks.push(1);
+    return ticks.sort(function (a, b) { return a - b; });
+  }
+  function tickLabel(v, logScale) {
+    if (logScale) return String(parseFloat(v.toPrecision(2)));
+    return String(parseFloat(v.toPrecision(6)));
+  }
+
+  function render() {
+    var mKey = document.getElementById("measure").value;
+    var M = MEASURES[mKey];
+    var model = document.getElementById("model").value;
+    var data = readStudies(M.log);
+    document.getElementById("rowWarn").textContent = data.bad ?
+      data.bad + " row(s) ignored: need numeric Effect with Lower < Upper" + (M.log ? ", all > 0 for ratio measures." : ".") : "";
+    var plotEl = document.getElementById("plot"), statsEl = document.getElementById("statsBox");
+    if (data.studies.length === 0) {
+      plotEl.innerHTML = '<p class="note">Add at least one study to draw the plot.</p>';
+      statsEl.innerHTML = ""; return;
+    }
+    var R = analyse(data.studies, M.log);
+    var showF = model === "both" || model === "fixed";
+    var showR = model === "both" || model === "random";
+    var useRandomWeights = model !== "fixed";
+
+    // ---- domain (analysis scale) ----
+    var nullA = 0; // log(1) = 0 and raw null = 0
+    var aLo = nullA, aHi = nullA, i;
+    R.studies.forEach(function (s) {
+      var l = M.log ? Math.log(s.lo) : s.lo, u = M.log ? Math.log(s.hi) : s.hi;
+      aLo = Math.min(aLo, l); aHi = Math.max(aHi, u);
+    });
+    [R.fixed, R.random].forEach(function (p) {
+      aLo = Math.min(aLo, M.log ? Math.log(p.lo) : p.lo);
+      aHi = Math.max(aHi, M.log ? Math.log(p.hi) : p.hi);
+    });
+    var pad = (aHi - aLo) * 0.06 || 0.1;
+    aLo -= pad; aHi += pad;
+
+    // ---- geometry ----
+    var W = 1000, labelX = 218, plotX0 = 345, plotX1 = 730, ciX = 748, wX = 988;
+    var rowH = 27, headH = 44, firstY = headH + rowH / 2;
+    var studiesH = R.k * rowH;
+    var poolRows = (showF ? 1 : 0) + (showR ? 1 : 0);
+    var poolY0 = headH + studiesH + 14;
+    var axisY = poolY0 + poolRows * 30 + 16;
+    var H = axisY + 46;
+    function X(a) { return plotX0 + (a - aLo) / (aHi - aLo) * (plotX1 - plotX0); }
+    function Xdisp(v) { return X(M.log ? Math.log(v) : v); }
+    var xNull = X(nullA);
+
+    var dispLo = M.log ? Math.exp(aLo) : aLo, dispHi = M.log ? Math.exp(aHi) : aHi;
+    var ticks = M.log ? ticksLog(dispLo, dispHi) : niceTicksLinear(dispLo, dispHi);
+
+    var s = '<svg id="forestSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + W + " " + H + '">';
+    s += '<rect x="0" y="0" width="' + W + '" height="' + H + '" fill="#ffffff"/>';
+    // header
+    s += '<text x="0" y="26" font-size="14" font-weight="bold" fill="#111">Study</text>';
+    s += '<text x="' + ((plotX0 + plotX1) / 2) + '" y="26" text-anchor="middle" font-size="14" font-weight="bold" fill="#111">' + M.long + "</text>";
+    s += '<text x="' + ciX + '" y="26" font-size="14" font-weight="bold" fill="#111">' + M.short + " [95% CI]</text>";
+    s += '<text x="' + wX + '" y="26" text-anchor="end" font-size="14" font-weight="bold" fill="#111">Weight</text>';
+    s += '<line x1="0" y1="36" x2="' + W + '" y2="36" stroke="#333" stroke-width="1.2"/>';
+    // null line
+    s += '<line x1="' + xNull + '" y1="38" x2="' + xNull + '" y2="' + axisY + '" stroke="#999" stroke-width="1" stroke-dasharray="5 4"/>';
+    // ticks gridlines (light)
+    ticks.forEach(function (t) {
+      var x = Xdisp(t);
+      s += '<line x1="' + x + '" y1="38" x2="' + x + '" y2="' + axisY + '" stroke="#eee" stroke-width="1"/>';
+    });
+
+    var maxW = 0;
+    R.studies.forEach(function (st) { maxW = Math.max(maxW, useRandomWeights ? st.wPctR : st.wPctF); });
+
+    R.studies.forEach(function (st, idx) {
+      var cy = firstY + idx * rowH;
+      var wpct = useRandomWeights ? st.wPctR : st.wPctF;
+      s += '<text x="' + labelX + '" y="' + (cy + 5) + '" text-anchor="end" font-size="13.5" fill="#111">' + esc(st.name) + "</text>";
+      var lx = Xdisp(st.lo), rx = Xdisp(st.hi), cx = Xdisp(st.eff);
+      var lClamp = Math.max(lx, plotX0), rClamp = Math.min(rx, plotX1);
+      s += '<line x1="' + lClamp + '" y1="' + cy + '" x2="' + rClamp + '" y2="' + cy + '" stroke="#333" stroke-width="1.6"/>';
+      if (lx < plotX0) s += '<polygon points="' + plotX0 + "," + cy + " " + (plotX0 + 7) + "," + (cy - 4) + " " + (plotX0 + 7) + "," + (cy + 4) + '" fill="#333"/>';
+      else s += '<line x1="' + lx + '" y1="' + (cy - 5) + '" x2="' + lx + '" y2="' + (cy + 5) + '" stroke="#333" stroke-width="1.6"/>';
+      if (rx > plotX1) s += '<polygon points="' + plotX1 + "," + cy + " " + (plotX1 - 7) + "," + (cy - 4) + " " + (plotX1 - 7) + "," + (cy + 4) + '" fill="#333"/>';
+      else s += '<line x1="' + rx + '" y1="' + (cy - 5) + '" x2="' + rx + '" y2="' + (cy + 5) + '" stroke="#333" stroke-width="1.6"/>';
+      var side = Math.max(5, 17 * Math.sqrt((useRandomWeights ? st.wPctR : st.wPctF) / (maxW || 1)));
+      s += '<rect x="' + (cx - side / 2) + '" y="' + (cy - side / 2) + '" width="' + side + '" height="' + side + '" fill="#0b5394"/>';
+      s += '<text x="' + ciX + '" y="' + (cy + 5) + '" font-size="13.5" fill="#111">' + fmt(st.eff) + " [" + fmt(st.lo) + ", " + fmt(st.hi) + "]</text>";
+      s += '<text x="' + wX + '" y="' + (cy + 5) + '" text-anchor="end" font-size="13.5" fill="#111">' + fmt(wpct, 1) + "%</text>";
+    });
+
+    // pooled rows
+    s += '<line x1="0" y1="' + (poolY0 - 8) + '" x2="' + W + '" y2="' + (poolY0 - 8) + '" stroke="#333" stroke-width="1.2"/>';
+    var prow = 0;
+    function diamond(pack, label, cy) {
+      var cx = Xdisp(pack.est), lx = Math.max(Xdisp(pack.lo), plotX0), rx = Math.min(Xdisp(pack.hi), plotX1);
+      var h = 10;
+      s += '<text x="' + labelX + '" y="' + (cy + 5) + '" text-anchor="end" font-size="13.5" font-weight="bold" fill="#111">' + label + "</text>";
+      s += '<polygon points="' + lx + "," + cy + " " + cx + "," + (cy - h) + " " + rx + "," + cy + " " + cx + "," + (cy + h) + '" fill="#0b5394"/>';
+      s += '<text x="' + ciX + '" y="' + (cy + 5) + '" font-size="13.5" font-weight="bold" fill="#111">' + fmt(pack.est) + " [" + fmt(pack.lo) + ", " + fmt(pack.hi) + "]</text>";
+    }
+    if (showF) { diamond(R.fixed, "Total (fixed-effect)", poolY0 + prow * 30 + 11); prow++; }
+    if (showR) { diamond(R.random, "Total (random-effects)", poolY0 + prow * 30 + 11); prow++; }
+
+    // axis
+    s += '<line x1="' + plotX0 + '" y1="' + axisY + '" x2="' + plotX1 + '" y2="' + axisY + '" stroke="#333" stroke-width="1.2"/>';
+    ticks.forEach(function (t) {
+      var x = Xdisp(t);
+      s += '<line x1="' + x + '" y1="' + axisY + '" x2="' + x + '" y2="' + (axisY + 6) + '" stroke="#333" stroke-width="1.2"/>';
+      s += '<text x="' + x + '" y="' + (axisY + 22) + '" text-anchor="middle" font-size="12.5" fill="#333">' + tickLabel(t, M.log) + "</text>";
+    });
+    s += '<text x="' + ((plotX0 + plotX1) / 2) + '" y="' + (axisY + 42) + '" text-anchor="middle" font-size="12.5" fill="#555">' + M.long + (M.log ? " (log scale)" : "") + "</text>";
+    s += "</svg>";
+    plotEl.innerHTML = s;
+    plotEl.dataset.height = H;
+
+    // ---- stats box ----
+    var html = "<strong>Pooled results</strong> (k = " + R.k + ")<br>";
+    html += "Fixed-effect: " + M.short + " = " + fmt(R.fixed.est, 3) + " [95% CI " + fmt(R.fixed.lo, 3) + " to " + fmt(R.fixed.hi, 3) + "], z = " + fmt(R.fixed.z, 2) + ", p = " + fmtP(R.fixed.p) + "<br>";
+    html += "Random-effects (DerSimonian–Laird): " + M.short + " = " + fmt(R.random.est, 3) + " [95% CI " + fmt(R.random.lo, 3) + " to " + fmt(R.random.hi, 3) + "], z = " + fmt(R.random.z, 2) + ", p = " + fmtP(R.random.p) + "<br>";
+    html += "<strong>Heterogeneity:</strong> Q = " + fmt(R.Q, 2) + " (df = " + R.df + ", p = " + fmtP(R.pQ) + "), I&sup2; = " + fmt(R.I2, 1) + "%, &tau;&sup2; = " + fmt(R.tau2, 3);
+    statsEl.innerHTML = html;
+  }
+
+  document.getElementById("addRowBtn").addEventListener("click", function () { addRow("", "", "", ""); });
+  document.getElementById("demoBtn").addEventListener("click", loadDemo);
+  document.getElementById("measure").addEventListener("change", render);
+  document.getElementById("model").addEventListener("change", render);
+  document.getElementById("csvBtn").addEventListener("click", function () {
+    var lines = document.getElementById("csvBox").value.split(/\r?\n/), rows = [];
+    lines.forEach(function (line) {
+      line = line.trim(); if (!line) return;
+      var parts = line.indexOf("\t") >= 0 ? line.split("\t") : (line.indexOf(";") >= 0 ? line.split(";") : line.split(","));
+      parts = parts.map(function (p) { return p.trim().replace(/^"|"$/g, ""); });
+      if (parts.length < 4) return;
+      var eff = parseFloat(parts[1]), lo = parseFloat(parts[2]), hi = parseFloat(parts[3]);
+      if (isNaN(eff) || isNaN(lo) || isNaN(hi)) return; // header or junk line
+      rows.push([parts[0], eff, lo, hi]);
+    });
+    if (rows.length) { body.innerHTML = ""; rows.forEach(function (r) { addRow(r[0], r[1], r[2], r[3]); }); render(); }
+  });
+
+  document.getElementById("downloadBtn").addEventListener("click", function () {
+    var svgEl = document.getElementById("forestSvg");
+    if (!svgEl) return;
+    var H = parseInt(document.getElementById("plot").dataset.height, 10) || 400;
+    var xml = new XMLSerializer().serializeToString(svgEl);
+    var img = new Image();
+    img.onload = function () {
+      var scale = 3;
+      var canvas = document.createElement("canvas");
+      canvas.width = 1000 * scale; canvas.height = H * scale;
+      var ctx = canvas.getContext("2d");
+      ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      var a = document.createElement("a");
+      a.download = "forest-plot.png";
+      a.href = canvas.toDataURL("image/png");
+      a.click();
+    };
+    img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(xml);
+  });
+
+  loadDemo();
+})();
+</script>
+</body>
+</html>
