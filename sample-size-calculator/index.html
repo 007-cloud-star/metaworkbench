@@ -1,1 +1,365 @@
-<!-- Sample Size Calculator placeholder -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sample Size Calculator — Two Means, Two Proportions & Non-Inferiority</title>
+<meta name="description" content="Free sample size calculator for comparative clinical studies: two independent means, two independent proportions and non-inferiority designs. Shows the formula, per-group and total sample sizes, and an attrition adjustment. No sign-up; runs entirely in your browser.">
+<style>
+  body { font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin: 0; color: #1a1a1a; background: #fafafa; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 24px 16px 64px; }
+  h1 { font-size: 28px; margin: 8px 0 6px; }
+  h2 { font-size: 20px; margin: 32px 0 8px; }
+  p.lead { color: #444; font-size: 16px; line-height: 1.55; max-width: 820px; }
+  .layout { display: flex; gap: 24px; flex-wrap: wrap; align-items: flex-start; }
+  .panel { background: #fff; border: 1px solid #ddd; border-radius: 10px; padding: 16px 18px; width: 470px; box-sizing: border-box; }
+  .preview { flex: 1; min-width: 340px; background: #fff; border: 1px solid #ddd; border-radius: 10px; padding: 16px 18px; box-sizing: border-box; }
+  .tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+  .tab { background: #eef4fb; color: #0b5394; border: 1px solid #b9d2ea; padding: 8px 11px; font-size: 13px; margin: 0; }
+  .tab[aria-selected="true"] { background: #0b5394; color: #fff; border-color: #0b5394; }
+  .design { display: none; }
+  .design.active { display: block; }
+  .design h3, .preview h3 { margin: 2px 0 8px; font-size: 16px; color: #0b5394; }
+  .design p { font-size: 13px; color: #666; line-height: 1.55; margin: 4px 0 10px; }
+  .fields { display: grid; grid-template-columns: 1fr 1fr; gap: 0 14px; }
+  .field.full { grid-column: 1 / -1; }
+  label { display: block; font-size: 13px; margin: 9px 0 3px; color: #333; }
+  input, select { width: 100%; padding: 7px 8px; font-size: 14px; border: 1px solid #bbb; border-radius: 6px; box-sizing: border-box; background: #fff; }
+  input { text-align: right; }
+  select { text-align: left; }
+  .hint { font-size: 12px; color: #777; line-height: 1.45; margin-top: 3px; }
+  button { background: #0b5394; color: #fff; border: 0; border-radius: 8px; padding: 10px 18px; font-size: 15px; cursor: pointer; margin-top: 12px; }
+  button:hover { background: #084a82; }
+  button.secondary { background: #eef4fb; color: #0b5394; border: 1px solid #0b5394; padding: 7px 12px; font-size: 13px; margin-top: 8px; }
+  button.secondary:hover { background: #dcebf8; }
+  .result-grid { display: grid; grid-template-columns: repeat(2, minmax(130px, 1fr)); gap: 12px; margin: 14px 0; }
+  .metric { background: #f7fafd; border: 1px solid #d7e5f2; border-radius: 8px; padding: 12px; }
+  .metric .value { font-size: 28px; font-weight: 700; color: #0b5394; line-height: 1.1; }
+  .metric .label { font-size: 12px; color: #555; margin-top: 4px; line-height: 1.4; }
+  .formula { background: #fbfcfe; border: 1px solid #e0e7ee; border-radius: 8px; padding: 11px 13px; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 13px; line-height: 1.65; overflow-wrap: anywhere; }
+  .details { font-size: 14px; line-height: 1.65; color: #222; }
+  .note { font-size: 13px; color: #666; line-height: 1.55; }
+  .warn { font-size: 14px; color: #b03a2e; line-height: 1.55; }
+  .faq p, .howto li { line-height: 1.6; color: #333; }
+  .hidden { display: none !important; }
+  footer { margin-top: 48px; font-size: 13px; color: #777; border-top: 1px solid #e2e2e2; padding-top: 12px; }
+  @media (max-width: 560px) { .fields, .result-grid { grid-template-columns: 1fr; } .panel, .preview { width: 100%; min-width: 0; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Sample Size Calculator</h1>
+  <p class="lead">Plan a comparative clinical study with the arithmetic in the open. Choose a design, enter the effect you need to detect, and get the <strong>per-group sample size</strong>, the total, and an attrition-adjusted recruitment target. The calculator uses standard normal approximations and shows its formula — no black box, no sign-up, and your inputs never leave your browser. 浏览器本地计算，免费使用。</p>
+
+  <div class="layout">
+    <div class="panel">
+      <div class="tabs" role="tablist" aria-label="Sample size design">
+        <button class="tab" type="button" role="tab" aria-selected="true" data-design="means">Two means</button>
+        <button class="tab" type="button" role="tab" aria-selected="false" data-design="proportions">Two proportions</button>
+        <button class="tab" type="button" role="tab" aria-selected="false" data-design="noninferiority">Non-inferiority</button>
+      </div>
+
+      <section class="design active" id="design-means" aria-label="Two independent means">
+        <h3>Two independent means</h3>
+        <p>For a continuous outcome compared between two independent groups, such as change in systolic blood pressure.</p>
+        <div class="fields">
+          <div class="field"><label for="m-diff">Difference to detect (absolute)</label><input id="m-diff" type="number" step="any" min="0" value="5"></div>
+          <div class="field"><label for="m-ratio">Allocation ratio, group 2 : group 1</label><input id="m-ratio" type="number" step="any" min="0" value="1"></div>
+          <div class="field"><label for="m-sd1">Standard deviation, group 1</label><input id="m-sd1" type="number" step="any" min="0" value="10"></div>
+          <div class="field"><label for="m-sd2">Standard deviation, group 2</label><input id="m-sd2" type="number" step="any" min="0" value="10"></div>
+          <div class="field"><label for="m-alpha">Significance level, alpha</label><input id="m-alpha" type="number" step="0.005" min="0" max="0.5" value="0.05"></div>
+          <div class="field"><label for="m-sided">Test sidedness</label><select id="m-sided"><option value="two" selected>Two-sided</option><option value="one">One-sided</option></select></div>
+          <div class="field"><label for="m-power">Power (%)</label><input id="m-power" type="number" step="1" min="50" max="99.9" value="80"></div>
+          <div class="field"><label for="m-attrition">Expected attrition (%)</label><input id="m-attrition" type="number" step="1" min="0" max="95" value="10"></div>
+        </div>
+        <p class="hint">Use the standard deviation of the outcome you will analyse — for a change score, use the SD of the change, not the SD of baseline or follow-up alone.</p>
+      </section>
+
+      <section class="design" id="design-proportions" aria-label="Two independent proportions">
+        <h3>Two independent proportions</h3>
+        <p>For a binary outcome compared between two independent groups, such as response, remission or a safety event.</p>
+        <div class="fields">
+          <div class="field"><label for="p-p1">Event proportion, group 1 (%)</label><input id="p-p1" type="number" step="any" min="0" max="100" value="30"></div>
+          <div class="field"><label for="p-p2">Event proportion, group 2 (%)</label><input id="p-p2" type="number" step="any" min="0" max="100" value="20"></div>
+          <div class="field"><label for="p-ratio">Allocation ratio, group 2 : group 1</label><input id="p-ratio" type="number" step="any" min="0" value="1"></div>
+          <div class="field"><label for="p-alpha">Significance level, alpha</label><input id="p-alpha" type="number" step="0.005" min="0" max="0.5" value="0.05"></div>
+          <div class="field"><label for="p-sided">Test sidedness</label><select id="p-sided"><option value="two" selected>Two-sided</option><option value="one">One-sided</option></select></div>
+          <div class="field"><label for="p-power">Power (%)</label><input id="p-power" type="number" step="1" min="50" max="99.9" value="80"></div>
+          <div class="field"><label for="p-attrition">Expected attrition (%)</label><input id="p-attrition" type="number" step="1" min="0" max="95" value="10"></div>
+        </div>
+        <p class="hint">Enter proportions as percentages. This module uses the usual normal approximation for a two-proportion comparison, without a continuity correction.</p>
+      </section>
+
+      <section class="design" id="design-noninferiority" aria-label="Non-inferiority">
+        <h3>Non-inferiority</h3>
+        <p>For showing that a new treatment is not unacceptably worse than a reference treatment by more than a pre-specified margin.</p>
+        <div class="fields">
+          <div class="field"><label for="n-endpoint">Endpoint type</label><select id="n-endpoint"><option value="means" selected>Continuous (means)</option><option value="proportions">Binary (proportions)</option></select></div>
+          <div class="field"><label for="n-direction">Better outcome is</label><select id="n-direction"><option value="higher" selected>Higher</option><option value="lower">Lower</option></select></div>
+
+          <div class="field ni-means"><label for="n-expected-diff">Expected difference, new − reference</label><input id="n-expected-diff" type="number" step="any" value="0"></div>
+          <div class="field ni-means"><label for="n-margin-mean">Non-inferiority margin</label><input id="n-margin-mean" type="number" step="any" min="0" value="4"></div>
+          <div class="field ni-means"><label for="n-sd1">Standard deviation, new group</label><input id="n-sd1" type="number" step="any" min="0" value="10"></div>
+          <div class="field ni-means"><label for="n-sd2">Standard deviation, reference group</label><input id="n-sd2" type="number" step="any" min="0" value="10"></div>
+
+          <div class="field ni-props hidden"><label for="n-p1">Expected proportion, new group (%)</label><input id="n-p1" type="number" step="any" min="0" max="100" value="20"></div>
+          <div class="field ni-props hidden"><label for="n-p2">Expected proportion, reference group (%)</label><input id="n-p2" type="number" step="any" min="0" max="100" value="20"></div>
+          <div class="field ni-props hidden"><label for="n-margin-prop">Non-inferiority margin (percentage points)</label><input id="n-margin-prop" type="number" step="any" min="0" value="5"></div>
+
+          <div class="field"><label for="n-ratio">Allocation ratio, reference : new</label><input id="n-ratio" type="number" step="any" min="0" value="1"></div>
+          <div class="field"><label for="n-alpha">One-sided alpha</label><input id="n-alpha" type="number" step="0.005" min="0" max="0.5" value="0.025"></div>
+          <div class="field"><label for="n-power">Power (%)</label><input id="n-power" type="number" step="1" min="50" max="99.9" value="80"></div>
+          <div class="field"><label for="n-attrition">Expected attrition (%)</label><input id="n-attrition" type="number" step="1" min="0" max="95" value="10"></div>
+        </div>
+        <p class="hint">The margin must be justified clinically and pre-specified before the trial starts. For the binary form, the calculator derives the expected difference from the two proportions you enter.</p>
+      </section>
+    </div>
+
+    <div class="preview" aria-live="polite">
+      <h3 id="resultTitle">Required sample size</h3>
+      <div id="resultBody"></div>
+      <button class="secondary" id="copyBtn" type="button">Copy result summary</button>
+      <p class="note" id="copyNote"></p>
+      <p class="note">These are planning calculations, not a substitute for the statistical section of a protocol. Confirm the final number with your trial statistician, especially for small samples, clustered designs, survival outcomes, repeated measures or analyses adjusted for covariates.</p>
+    </div>
+  </div>
+
+  <h2>How the calculations work</h2>
+  <ol class="howto">
+    <li><strong>Start with the analysis.</strong> The sample size follows the primary comparison you plan to run. A calculator cannot rescue an undefined primary outcome, an unrealistic effect size or a margin chosen after seeing the data.</li>
+    <li><strong>Two means.</strong> With allocation ratio r = n₂/n₁, the normal-approximation formula is n₁ = (z<sub>α</sub> + z<sub>power</sub>)² (σ₁² + σ₂²/r) / Δ², and n₂ = r·n₁. Group sizes are rounded up.</li>
+    <li><strong>Two proportions.</strong> The calculation uses a pooled variance under the null hypothesis and the group-specific variances under the alternative — the standard normal approximation behind most protocol calculations. No continuity correction is applied.</li>
+    <li><strong>Non-inferiority.</strong> What matters is the distance between the expected treatment difference and the non-inferiority boundary. If the expected difference already sits on the wrong side of that boundary, no finite sample size can fix the design.</li>
+    <li><strong>Attrition.</strong> The recruitment target is n<sub>adjusted</sub> = n / (1 − attrition). This assumes participants lost to follow-up contribute no primary-outcome information.</li>
+  </ol>
+
+  <h2>Frequently asked questions</h2>
+  <div class="faq">
+    <p><strong>Why does another calculator give a slightly different answer?</strong><br>Usually because it uses an exact test, a t-based iteration, a continuity correction or a different variance formula. Small differences of one or two participants per group are common. For a two-sample t-test, an exact noncentral-t calculation can require slightly more participants than the normal approximation when the sample is small.</p>
+    <p><strong>Should I use 80% or 90% power?</strong><br>Eighty percent is the common convention; ninety percent is safer when recruitment is feasible, the outcome is noisy, or a negative trial would be especially costly. Power is a design choice to justify in the protocol, not a number to copy by habit.</p>
+    <p><strong>Can I use this for a paired design, survival outcome or cluster trial?</strong><br>Not directly. Paired designs need the SD of within-person differences; survival outcomes are usually powered on the number of events; cluster trials need an intracluster correlation and a design effect. Those require different formulas.</p>
+    <p><strong>Is my data uploaded anywhere?</strong><br>No. All arithmetic happens locally in your browser.</p>
+    <p><strong>Can I trust the numbers?</strong><br>The formulas were cross-checked against independent calculations before release. Even so, treat this as a transparent planning and checking aid — the protocol's final sample size should be reproduced in your primary statistical software.</p>
+  </div>
+
+  <footer>Meta Workbench — built by R. Dong, emergency physician &amp; systematic reviewer, Tianjin. <a href="../index.html">Back to all tools</a>. Tools are provided for research use; always verify figures against your own analysis before submission.</footer>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  // === SAMPLE SIZE CORE START (pure functions, no DOM — validated against Python) ===
+  function normInv(p) {
+    if (!(p > 0 && p < 1)) return NaN;
+    var a = [-39.69683028665376, 220.9460984245205, -275.9285104469687, 138.3577518672690, -30.66479806614716, 2.506628277459239];
+    var b = [-54.47609879822406, 161.5858368580409, -155.6989798598866, 66.80131188771972, -13.28068155288572];
+    var c = [-0.007784894002430293, -0.3223964580411365, -2.400758277161838, -2.549732539343734, 4.374664141464968, 2.938163982698783];
+    var d = [0.007784695709041462, 0.3224671290700398, 2.445134137142996, 3.754408661907416];
+    var pLow = 0.02425, pHigh = 1 - pLow, q, r, i, num, den;
+    if (p < pLow) {
+      q = Math.sqrt(-2 * Math.log(p));
+      num = (((((c[0] * q + c[1]) * q + c[2]) * q + c[3]) * q + c[4]) * q + c[5]);
+      den = ((((d[0] * q + d[1]) * q + d[2]) * q + d[3]) * q + 1);
+      return num / den;
+    }
+    if (p <= pHigh) {
+      q = p - 0.5; r = q * q;
+      num = (((((a[0] * r + a[1]) * r + a[2]) * r + a[3]) * r + a[4]) * r + a[5]) * q;
+      den = (((((b[0] * r + b[1]) * r + b[2]) * r + b[3]) * r + b[4]) * r + 1);
+      return num / den;
+    }
+    q = Math.sqrt(-2 * Math.log(1 - p));
+    num = (((((c[0] * q + c[1]) * q + c[2]) * q + c[3]) * q + c[4]) * q + c[5]);
+    den = ((((d[0] * q + d[1]) * q + d[2]) * q + d[3]) * q + 1);
+    return -num / den;
+  }
+
+  function zAlpha(alpha, sided) {
+    return sided === "one" ? normInv(1 - alpha) : normInv(1 - alpha / 2);
+  }
+
+  function finish(raw1, ratio, attrition) {
+    var n1 = Math.ceil(raw1);
+    var n2 = Math.ceil(raw1 * ratio);
+    var a1 = Math.ceil(n1 / (1 - attrition));
+    var a2 = Math.ceil(n2 / (1 - attrition));
+    return { raw1: raw1, raw2: raw1 * ratio, n1: n1, n2: n2, total: n1 + n2,
+             adj1: a1, adj2: a2, adjTotal: a1 + a2 };
+  }
+
+  function twoMeans(o) {
+    var z = zAlpha(o.alpha, o.sided) + normInv(o.power);
+    var variance = o.sd1 * o.sd1 + (o.sd2 * o.sd2) / o.ratio;
+    var raw1 = z * z * variance / (o.diff * o.diff);
+    return { zAlpha: zAlpha(o.alpha, o.sided), zPower: normInv(o.power), zSum: z,
+             varianceTerm: variance, result: finish(raw1, o.ratio, o.attrition) };
+  }
+
+  function twoProportions(o) {
+    var za = zAlpha(o.alpha, o.sided), zb = normInv(o.power);
+    var delta = Math.abs(o.p1 - o.p2);
+    var pBar = (o.p1 + o.ratio * o.p2) / (1 + o.ratio);
+    var nullTerm = Math.sqrt((1 + 1 / o.ratio) * pBar * (1 - pBar));
+    var altTerm = Math.sqrt(o.p1 * (1 - o.p1) + o.p2 * (1 - o.p2) / o.ratio);
+    var raw1 = Math.pow(za * nullTerm + zb * altTerm, 2) / (delta * delta);
+    return { zAlpha: za, zPower: zb, pBar: pBar, nullTerm: nullTerm, altTerm: altTerm,
+             result: finish(raw1, o.ratio, o.attrition) };
+  }
+
+  function nonInferiority(o) {
+    var z = normInv(1 - o.alpha) + normInv(o.power);
+    var distance = o.direction === "higher" ? o.expectedDiff + o.margin : o.margin - o.expectedDiff;
+    var raw1 = z * z * o.varianceTerm / (distance * distance);
+    return { zAlpha: normInv(1 - o.alpha), zPower: normInv(o.power), zSum: z,
+             distance: distance, result: finish(raw1, o.ratio, o.attrition) };
+  }
+  // === SAMPLE SIZE CORE END ===
+
+  var activeDesign = "means";
+  var lastSummary = "";
+
+  function num(id) { return parseFloat(document.getElementById(id).value); }
+  function val(id) { return document.getElementById(id).value; }
+  function fmt(x, digits) { return Number(x).toFixed(digits == null ? 3 : digits); }
+  function validCommon(alpha, powerPct, ratio, attritionPct) {
+    if (!(alpha > 0 && alpha < 0.5)) return "Alpha must be greater than 0 and less than 0.5.";
+    if (!(powerPct > 50 && powerPct < 99.95)) return "Power must be greater than 50% and less than 99.95%.";
+    if (!(ratio > 0 && ratio <= 20)) return "The allocation ratio must be greater than 0 and no more than 20.";
+    if (!(attritionPct >= 0 && attritionPct < 95)) return "Attrition must be at least 0% and less than 95%.";
+    return "";
+  }
+  function showError(message) {
+    document.getElementById("resultBody").innerHTML = '<p class="warn">' + message + "</p>";
+    lastSummary = "";
+  }
+  function showResult(title, calc, formula, details) {
+    var r = calc.result;
+    document.getElementById("resultTitle").textContent = title;
+    document.getElementById("resultBody").innerHTML =
+      '<div class="result-grid">' +
+      '<div class="metric"><div class="value">' + r.n1 + '</div><div class="label">Group 1 — analysable participants required</div></div>' +
+      '<div class="metric"><div class="value">' + r.n2 + '</div><div class="label">Group 2 — analysable participants required</div></div>' +
+      '<div class="metric"><div class="value">' + r.total + '</div><div class="label">Total analysable sample size</div></div>' +
+      '<div class="metric"><div class="value">' + r.adjTotal + '</div><div class="label">Recruitment target after attrition (' + r.adj1 + ' + ' + r.adj2 + ')</div></div>' +
+      '</div>' +
+      '<div class="details">' + details + '</div>' +
+      '<h3 style="margin-top:16px">Formula used</h3><div class="formula">' + formula + '</div>';
+    lastSummary = title + ": group 1 n=" + r.n1 + ", group 2 n=" + r.n2 + ", total analysable N=" + r.total + ", recruitment target after attrition=" + r.adjTotal + " (" + r.adj1 + " + " + r.adj2 + ").";
+  }
+
+  function renderMeans() {
+    var o = { diff: Math.abs(num("m-diff")), sd1: num("m-sd1"), sd2: num("m-sd2"), alpha: num("m-alpha"), sided: val("m-sided"), power: num("m-power") / 100, ratio: num("m-ratio"), attrition: num("m-attrition") / 100 };
+    var err = validCommon(o.alpha, num("m-power"), o.ratio, num("m-attrition"));
+    if (!err && !(o.diff > 0)) err = "The difference to detect must be greater than 0.";
+    if (!err && (!(o.sd1 > 0) || !(o.sd2 > 0))) err = "Both standard deviations must be greater than 0.";
+    if (err) return showError(err);
+    var c = twoMeans(o);
+    var formula = "n₁ = (zα + zpower)² [σ₁² + σ₂²/r] / Δ²<br>" +
+      "= (" + fmt(c.zAlpha) + " + " + fmt(c.zPower) + ")² [" + fmt(o.sd1) + "² + " + fmt(o.sd2) + "²/" + fmt(o.ratio, 2) + "] / " + fmt(o.diff) + "²<br>" +
+      "= " + fmt(c.result.raw1, 2) + " → round up to " + c.result.n1 + " in group 1; n₂ = r × n₁.";
+    var details = "You need <strong>" + c.result.n1 + "</strong> analysable participants in group 1 and <strong>" + c.result.n2 + "</strong> in group 2. " +
+      "The standardised difference implied by these inputs is " + fmt(o.diff / ((o.sd1 + o.sd2) / 2), 2) + " using the average of the two SDs. " +
+      "This is a normal approximation; an exact t-based calculation may add a participant or two per group at small sample sizes.";
+    showResult("Two independent means", c, formula, details);
+  }
+
+  function renderProportions() {
+    var o = { p1: num("p-p1") / 100, p2: num("p-p2") / 100, alpha: num("p-alpha"), sided: val("p-sided"), power: num("p-power") / 100, ratio: num("p-ratio"), attrition: num("p-attrition") / 100 };
+    var err = validCommon(o.alpha, num("p-power"), o.ratio, num("p-attrition"));
+    if (!err && (!(o.p1 > 0 && o.p1 < 1) || !(o.p2 > 0 && o.p2 < 1))) err = "Both proportions must be greater than 0% and less than 100%.";
+    if (!err && o.p1 === o.p2) err = "The two proportions are equal, so there is no difference to detect.";
+    if (err) return showError(err);
+    var c = twoProportions(o);
+    var formula = "n₁ = [zα√((1+1/r)·p̄(1−p̄)) + zpower√(p₁(1−p₁)+p₂(1−p₂)/r)]² / (p₁−p₂)²<br>" +
+      "p̄ = " + fmt(c.pBar, 4) + "; zα = " + fmt(c.zAlpha) + "; zpower = " + fmt(c.zPower) + "<br>" +
+      "n₁ = " + fmt(c.result.raw1, 2) + " → round up to " + c.result.n1 + "; n₂ = r × n₁.";
+    var details = "The absolute difference is <strong>" + fmt(Math.abs(o.p1 - o.p2) * 100, 1) + " percentage points</strong> (" + fmt(o.p1 * 100, 1) + "% vs " + fmt(o.p2 * 100, 1) + "%). " +
+      "You need <strong>" + c.result.n1 + "</strong> analysable participants in group 1 and <strong>" + c.result.n2 + "</strong> in group 2. " +
+      "No continuity correction has been applied.";
+    showResult("Two independent proportions", c, formula, details);
+  }
+
+  function renderNonInferiority() {
+    var endpoint = val("n-endpoint"), direction = val("n-direction");
+    var alpha = num("n-alpha"), powerPct = num("n-power"), ratio = num("n-ratio"), attritionPct = num("n-attrition");
+    var err = validCommon(alpha, powerPct, ratio, attritionPct);
+    var o = { alpha: alpha, power: powerPct / 100, ratio: ratio, attrition: attritionPct / 100, direction: direction };
+    var formula = "", details = "", c;
+    if (endpoint === "means") {
+      o.expectedDiff = num("n-expected-diff"); o.margin = num("n-margin-mean");
+      o.varianceTerm = Math.pow(num("n-sd1"), 2) + Math.pow(num("n-sd2"), 2) / ratio;
+      if (!err && !(o.margin > 0)) err = "The non-inferiority margin must be greater than 0.";
+      if (!err && (!(num("n-sd1") > 0) || !(num("n-sd2") > 0))) err = "Both standard deviations must be greater than 0.";
+      if (!err) {
+        c = nonInferiority(o);
+        if (!(c.distance > 0)) err = "The expected difference is already beyond the non-inferiority boundary. Change the expected difference or the margin — increasing the sample size cannot repair this design.";
+      }
+      if (err) return showError(err);
+      formula = "distance d = " + (direction === "higher" ? "expected difference + margin" : "margin − expected difference") + " = " + fmt(c.distance) + "<br>" +
+        "n(new) = (z₁−α + zpower)² [σnew² + σref²/r] / d²<br>" +
+        "= (" + fmt(c.zAlpha) + " + " + fmt(c.zPower) + ")² × " + fmt(o.varianceTerm, 2) + " / " + fmt(c.distance) + "² = " + fmt(c.result.raw1, 2) + " → " + c.result.n1 + ".";
+      details = "The new group needs <strong>" + c.result.n1 + "</strong> analysable participants and the reference group <strong>" + c.result.n2 + "</strong>. " +
+        "This uses a one-sided alpha of " + fmt(alpha, 3) + " and assumes " + (direction === "higher" ? "higher" : "lower") + " values are better.";
+      showResult("Non-inferiority — continuous endpoint", c, formula, details);
+    } else {
+      var p1 = num("n-p1") / 100, p2 = num("n-p2") / 100;
+      o.expectedDiff = p1 - p2; o.margin = num("n-margin-prop") / 100;
+      o.varianceTerm = p1 * (1 - p1) + p2 * (1 - p2) / ratio;
+      if (!err && (!(p1 > 0 && p1 < 1) || !(p2 > 0 && p2 < 1))) err = "Both proportions must be greater than 0% and less than 100%.";
+      if (!err && !(o.margin > 0)) err = "The non-inferiority margin must be greater than 0 percentage points.";
+      if (!err) {
+        c = nonInferiority(o);
+        if (!(c.distance > 0)) err = "The expected difference is already beyond the non-inferiority boundary. Change the expected proportions or the margin — increasing the sample size cannot repair this design.";
+      }
+      if (err) return showError(err);
+      formula = "expected difference θ = p(new) − p(reference) = " + fmt(o.expectedDiff, 4) + "<br>" +
+        "distance d = " + (direction === "higher" ? "θ + margin" : "margin − θ") + " = " + fmt(c.distance, 4) + "<br>" +
+        "n(new) = (z₁−α + zpower)² [pnew(1−pnew) + pref(1−pref)/r] / d² = " + fmt(c.result.raw1, 2) + " → " + c.result.n1 + ".";
+      details = "The new group needs <strong>" + c.result.n1 + "</strong> analysable participants and the reference group <strong>" + c.result.n2 + "</strong>. " +
+        "This uses a one-sided alpha of " + fmt(alpha, 3) + ", a margin of " + fmt(o.margin * 100, 1) + " percentage points, and assumes " + (direction === "higher" ? "higher" : "lower") + " proportions are better.";
+      showResult("Non-inferiority — binary endpoint", c, formula, details);
+    }
+  }
+
+  function render() {
+    document.getElementById("copyNote").textContent = "";
+    if (activeDesign === "means") renderMeans();
+    if (activeDesign === "proportions") renderProportions();
+    if (activeDesign === "noninferiority") renderNonInferiority();
+  }
+
+  function syncNiFields() {
+    var isMeans = val("n-endpoint") === "means";
+    document.querySelectorAll(".ni-means").forEach(function (el) { el.classList.toggle("hidden", !isMeans); });
+    document.querySelectorAll(".ni-props").forEach(function (el) { el.classList.toggle("hidden", isMeans); });
+  }
+
+  document.querySelectorAll(".tab").forEach(function (tab) {
+    tab.addEventListener("click", function () {
+      activeDesign = tab.getAttribute("data-design");
+      document.querySelectorAll(".tab").forEach(function (t) { t.setAttribute("aria-selected", t === tab ? "true" : "false"); });
+      document.querySelectorAll(".design").forEach(function (s) { s.classList.toggle("active", s.id === "design-" + activeDesign); });
+      render();
+    });
+  });
+  document.querySelectorAll("input, select").forEach(function (el) {
+    el.addEventListener("input", function () { if (el.id === "n-endpoint") syncNiFields(); render(); });
+    el.addEventListener("change", function () { if (el.id === "n-endpoint") syncNiFields(); render(); });
+  });
+  document.getElementById("copyBtn").addEventListener("click", function () {
+    if (!lastSummary) return;
+    var note = document.getElementById("copyNote");
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(lastSummary).then(function () { note.textContent = "Copied."; }, function () { note.textContent = lastSummary; });
+    } else {
+      note.textContent = lastSummary;
+    }
+  });
+
+  syncNiFields();
+  render();
+})();
+</script>
+</body>
+</html>
