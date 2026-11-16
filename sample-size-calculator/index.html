@@ -60,6 +60,9 @@
   footer { margin-top: 48px; font-size: 13px; color: #777; border-top: 1px solid #e2e2e2; padding-top: 12px; }
   @media (max-width: 560px) { .fields, .result-grid { grid-template-columns: 1fr; } .panel, .preview { width: 100%; min-width: 0; } }
 </style>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Why does another calculator give a slightly different answer?", "acceptedAnswer": {"@type": "Answer", "text": "Usually because it uses an exact test, a t-based iteration, a continuity correction or a different variance formula. Small differences of one or two participants per group are common. For a two-sample t-test, an exact noncentral-t calculation can require slightly more participants than the normal approximation when the sample is small."}}, {"@type": "Question", "name": "Should I use 80% or 90% power?", "acceptedAnswer": {"@type": "Answer", "text": "Eighty percent is the common convention; ninety percent is safer when recruitment is feasible, the outcome is noisy, or a negative trial would be especially costly. Power is a design choice to justify in the protocol, not a number to copy by habit."}}, {"@type": "Question", "name": "Can I use this for a paired design, survival outcome or cluster trial?", "acceptedAnswer": {"@type": "Answer", "text": "Not directly. Paired designs need the SD of within-person differences; survival outcomes are usually powered on the number of events; cluster trials need an intracluster correlation and a design effect. Those require different formulas."}}, {"@type": "Question", "name": "Is my data uploaded anywhere?", "acceptedAnswer": {"@type": "Answer", "text": "No. All arithmetic happens locally in your browser."}}, {"@type": "Question", "name": "Can I trust the numbers?", "acceptedAnswer": {"@type": "Answer", "text": "The formulas were cross-checked against independent calculations before release. Even so, treat this as a transparent planning and checking aid — the protocol's final sample size should be reproduced in your primary statistical software."}}, {"@type": "Question", "name": "Does the calculator adjust for dropout or loss to follow-up?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Enter the expected attrition percentage and the recruitment target is inflated automatically as n / (1 − attrition), so the analysable sample still reaches the required size if losses match your estimate."}}, {"@type": "Question", "name": "How do I calculate a sample size without G*Power, SPSS or PASS?", "acceptedAnswer": {"@type": "Answer", "text": "Choose your design above — two independent means, two independent proportions, or a non-inferiority comparison — enter alpha, power and the effect you need to detect, and the per-group sample size, the total and the attrition-adjusted recruitment target are shown together with the formula used. Everything runs in your browser; nothing is installed."}}]}
+</script>
 </head>
 <body>
 <div class="wrap">
@@ -155,13 +158,19 @@
     <p><strong>Can I use this for a paired design, survival outcome or cluster trial?</strong><br>Not directly. Paired designs need the SD of within-person differences; survival outcomes are usually powered on the number of events; cluster trials need an intracluster correlation and a design effect. Those require different formulas.</p>
     <p><strong>Is my data uploaded anywhere?</strong><br>No. All arithmetic happens locally in your browser.</p>
     <p><strong>Can I trust the numbers?</strong><br>The formulas were cross-checked against independent calculations before release. Even so, treat this as a transparent planning and checking aid — the protocol's final sample size should be reproduced in your primary statistical software.</p>
+    <p><strong>Does the calculator adjust for dropout or loss to follow-up?</strong><br>Yes. Enter the expected attrition percentage and the recruitment target is inflated automatically as n / (1 &#8722; attrition), so the analysable sample still reaches the required size if losses match your estimate.</p>
+    <p><strong>How do I calculate a sample size without G*Power, SPSS or PASS?</strong><br>Choose your design above &#8212; two independent means, two independent proportions, or a non-inferiority comparison &#8212; enter alpha, power and the effect you need to detect, and the per-group sample size, the total and the attrition-adjusted recruitment target are shown together with the formula used. Everything runs in your browser; nothing is installed.</p>
   </div>
 
-  <div style="margin:32px 0 0;padding:14px 16px;border:1px solid #e2e2e2;border-radius:8px;font-size:14px;line-height:1.6;">
-    <strong>📚 Go deeper — the full workflow, step by step.</strong> The author also writes a paid Chinese column, 《Meta 分析实操手记》, covering the whole meta-analysis pipeline: choosing a question, building a reproducible search, dual screening &amp; extraction, RoB 2 judgements, and reading forest plots — one practical instalment each week. <a href="https://wx.zsxq.com/group/15551248281522" target="_blank" rel="noopener">Join on Zhishixingqiu (Knowledge Planet)</a> — early-bird ¥99. 系统学全流程的中文专栏，每周一篇实操。
-  </div>
-  
-  <footer>Meta Workbench — built by R. Dong, emergency physician &amp; systematic reviewer, Tianjin. <a href="../index.html">Back to all tools</a>. Tools are provided for research use; always verify figures against your own analysis before submission.</footer>
+<div style="margin:32px 0 0;padding:14px 16px;border:1px solid #e2e2e2;border-radius:8px;font-size:14px;line-height:1.6;">
+<strong>📚 Go deeper — the full workflow, step by step.</strong> The author also writes a paid Chinese column, 《Meta 分析实操手记》, covering the whole meta-analysis pipeline: choosing a question, building a reproducible search, dual screening &amp; extraction, RoB 2 judgements, and reading forest plots — one practical instalment each week. <a href="https://wx.zsxq.com/group/15551248281522" target="_blank" rel="noopener">Join on Zhishixingqiu (Knowledge Planet)</a> — early-bird ¥99. 系统学全流程的中文专栏，每周一篇实操。
+</div>
+
+<div style="margin:28px 0 0;padding:12px 16px;border:1px solid #e2e2e2;border-radius:8px;font-size:14px;line-height:1.6;background:#fff;">
+<strong>More free tools from Meta Workbench:</strong> <a href="../forest-plot-generator/">Forest Plot Generator</a> &#183; <a href="../prisma-flow-diagram-generator/">PRISMA Flow Diagram Generator</a> &#183; <a href="../rob-traffic-light-generator/">RoB 2 Traffic Light Plot Generator</a> &#183; <a href="../index.html">All tools</a>
+</div>
+
+  <footer>Meta Workbench — built by R. Dong, a physician &amp; systematic reviewer. <a href="../index.html">Back to all tools</a>. Tools are provided for research use; always verify figures against your own analysis before submission.</footer>
 </div>
 
 <script>
