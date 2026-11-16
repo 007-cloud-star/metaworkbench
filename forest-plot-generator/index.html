@@ -53,6 +53,9 @@
   .warn { font-size: 13px; color: #b03a2e; }
   footer { margin-top: 48px; font-size: 13px; color: #777; border-top: 1px solid #e2e2e2; padding-top: 12px; }
 </style>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Which effect measures are supported?", "acceptedAnswer": {"@type": "Answer", "text": "Odds ratios and risk ratios (pooled on the log scale, null line at 1) and mean differences / standardised mean differences (pooled on the raw scale, null line at 0). Enter the effect and its 95% CI exactly as reported by your study or your extraction sheet."}}, {"@type": "Question", "name": "Fixed-effect or random-effects — which should I report?", "acceptedAnswer": {"@type": "Answer", "text": "That is a design decision, not a software default: fixed-effect assumes one true effect; random-effects allows the true effect to vary between studies and is the usual choice when populations or protocols differ. This tool shows both, plus I² and τ², so you can justify your choice. Pre-specify the primary model in your protocol."}}, {"@type": "Question", "name": "Is this generator free?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. It is free to use and the PNG download carries no watermark and requires no account."}}, {"@type": "Question", "name": "Is my data uploaded anywhere?", "acceptedAnswer": {"@type": "Answer", "text": "No. The plot is drawn locally in your browser; nothing is sent to a server."}}, {"@type": "Question", "name": "Can I trust the numbers?", "acceptedAnswer": {"@type": "Answer", "text": "The statistics were validated against an independent Python implementation (numpy/scipy hand formulas) on the preloaded demo dataset, matching to at least three significant figures. Even so, always verify pooled figures against your primary analysis software before submission — this tool is a drafting and checking aid, not a replacement for your registered analysis plan."}}, {"@type": "Question", "name": "How do I make a forest plot without R, Stata or RevMan?", "acceptedAnswer": {"@type": "Answer", "text": "Enter each study’s effect estimate and 95% CI in the table above — or paste a CSV — choose the effect measure, and the plot is drawn instantly in your browser. Download it as a PNG when you are done. No installation, no code and no account are needed."}}, {"@type": "Question", "name": "Can I use the downloaded plot in a journal submission?", "acceptedAnswer": {"@type": "Answer", "text": "The plot downloads as a PNG image with no watermark. Most journals accept a PNG for initial submission; if the production office later asks for a vector file or a specific resolution, check the journal’s author guidelines — and keep your study table, so the figure can be regenerated in seconds."}}]}
+</script>
 </head>
 <body>
 <div class="wrap">
@@ -114,13 +117,19 @@
     <p><strong>Is this generator free?</strong><br>Yes. It is free to use and the PNG download carries no watermark and requires no account.</p>
     <p><strong>Is my data uploaded anywhere?</strong><br>No. The plot is drawn locally in your browser; nothing is sent to a server.</p>
     <p><strong>Can I trust the numbers?</strong><br>The statistics were validated against an independent Python implementation (numpy/scipy hand formulas) on the preloaded demo dataset, matching to at least three significant figures. Even so, always verify pooled figures against your primary analysis software before submission — this tool is a drafting and checking aid, not a replacement for your registered analysis plan.</p>
+    <p><strong>How do I make a forest plot without R, Stata or RevMan?</strong><br>Enter each study&#8217;s effect estimate and 95% CI in the table above &#8212; or paste a CSV &#8212; choose the effect measure, and the plot is drawn instantly in your browser. Download it as a PNG when you are done. No installation, no code and no account are needed.</p>
+    <p><strong>Can I use the downloaded plot in a journal submission?</strong><br>The plot downloads as a PNG image with no watermark. Most journals accept a PNG for initial submission; if the production office later asks for a vector file or a specific resolution, check the journal&#8217;s author guidelines &#8212; and keep your study table, so the figure can be regenerated in seconds.</p>
   </div>
 
 <div style="margin:32px 0 0;padding:14px 16px;border:1px solid #e2e2e2;border-radius:8px;font-size:14px;line-height:1.6;">
-  <strong>📚 Go deeper — the full workflow, step by step.</strong> The author also writes a paid Chinese column, 《Meta 分析实操手记》, covering the whole meta-analysis pipeline: choosing a question, building a reproducible search, dual screening &amp; extraction, RoB 2 judgements, and reading forest plots — one practical instalment each week. <a href="https://wx.zsxq.com/group/15551248281522" target="_blank" rel="noopener">Join on Zhishixingqiu (Knowledge Planet)</a> — early-bird ¥99. 系统学全流程的中文专栏，每周一篇实操。
+<strong>📚 Go deeper — the full workflow, step by step.</strong> The author also writes a paid Chinese column, 《Meta 分析实操手记》, covering the whole meta-analysis pipeline: choosing a question, building a reproducible search, dual screening &amp; extraction, RoB 2 judgements, and reading forest plots — one practical instalment each week. <a href="https://wx.zsxq.com/group/15551248281522" target="_blank" rel="noopener">Join on Zhishixingqiu (Knowledge Planet)</a> — early-bird ¥99. 系统学全流程的中文专栏，每周一篇实操。
 </div>
-  
-  <footer>Meta Workbench — built by R. Dong, emergency physician &amp; systematic reviewer, Tianjin. <a href="../index.html">Back to all tools</a>. Tools are provided for research use; always verify figures against your own analysis before submission.</footer>
+
+<div style="margin:28px 0 0;padding:12px 16px;border:1px solid #e2e2e2;border-radius:8px;font-size:14px;line-height:1.6;background:#fff;">
+<strong>More free tools from Meta Workbench:</strong> <a href="../prisma-flow-diagram-generator/">PRISMA Flow Diagram Generator</a> &#183; <a href="../rob-traffic-light-generator/">RoB 2 Traffic Light Plot Generator</a> &#183; <a href="../sample-size-calculator/">Sample Size Calculator</a> &#183; <a href="../index.html">All tools</a>
+</div>
+
+  <footer>Meta Workbench — built by R. Dong, a physician &amp; systematic reviewer. <a href="../index.html">Back to all tools</a>. Tools are provided for research use; always verify figures against your own analysis before submission.</footer>
 </div>
 
 <script>
