@@ -57,6 +57,9 @@
   .warn { font-size: 13px; color: #b03a2e; }
   footer { margin-top: 48px; font-size: 13px; color: #777; border-top: 1px solid #e2e2e2; padding-top: 12px; }
 </style>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is this the official RoB 2 tool?", "acceptedAnswer": {"@type": "Answer", "text": "No. This page only draws the plots (in the style of the robvis visualisations, McGuinness & Higgins 2020) from judgements you enter. The judgements themselves come from answering the RoB 2 signalling questions for each trial (Sterne et al., BMJ 2019) — this tool does not assess your trials for you, and it is not affiliated with the RoB 2 developers."}}, {"@type": "Question", "name": "Which RoB 2 version does it cover?", "acceptedAnswer": {"@type": "Answer", "text": "The standard version for individually randomised, parallel-group trials, with its five domains. The cluster-randomised and crossover variants add domains (e.g. timing of identification/recruitment) and are not covered yet."}}, {"@type": "Question", "name": "Why is there an Overall row in the summary plot?", "acceptedAnswer": {"@type": "Answer", "text": "Journals commonly show the distribution of overall judgements alongside the domains. It pools each study's overall judgement — after any overrides you set — exactly like a domain row."}}, {"@type": "Question", "name": "Is this generator free?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. It is free to use and the PNG downloads carry no watermark and require no account."}}, {"@type": "Question", "name": "Is my data uploaded anywhere?", "acceptedAnswer": {"@type": "Answer", "text": "No. Both plots are drawn locally in your browser; nothing is sent to a server."}}, {"@type": "Question", "name": "How do I make a RoB 2 traffic light plot without R and robvis?", "acceptedAnswer": {"@type": "Answer", "text": "Type or paste your per-domain judgements for each study into the table above. The traffic light plot and the weighted summary plot are drawn in your browser and download as PNG files — no R installation or coding needed."}}, {"@type": "Question", "name": "What do Low, Some concerns and High mean?", "acceptedAnswer": {"@type": "Answer", "text": "They are the three RoB 2 judgement categories, applied per domain and then combined into an overall judgement for each study: Low risk of bias, Some concerns, or High risk of bias. This tool only draws the plots — the judgements themselves come from your own RoB 2 assessments."}}]}
+</script>
 </head>
 <body>
 <div class="wrap">
@@ -127,13 +130,19 @@
     <p><strong>Why is there an Overall row in the summary plot?</strong><br>Journals commonly show the distribution of overall judgements alongside the domains. It pools each study's overall judgement — after any overrides you set — exactly like a domain row.</p>
     <p><strong>Is this generator free?</strong><br>Yes. It is free to use and the PNG downloads carry no watermark and require no account.</p>
     <p><strong>Is my data uploaded anywhere?</strong><br>No. Both plots are drawn locally in your browser; nothing is sent to a server.</p>
+    <p><strong>How do I make a RoB 2 traffic light plot without R and robvis?</strong><br>Type or paste your per-domain judgements for each study into the table above. The traffic light plot and the weighted summary plot are drawn in your browser and download as PNG files &#8212; no R installation or coding needed.</p>
+    <p><strong>What do Low, Some concerns and High mean?</strong><br>They are the three RoB 2 judgement categories, applied per domain and then combined into an overall judgement for each study: Low risk of bias, Some concerns, or High risk of bias. This tool only draws the plots &#8212; the judgements themselves come from your own RoB 2 assessments.</p>
   </div>
 
-  <div style="margin:32px 0 0;padding:14px 16px;border:1px solid #e2e2e2;border-radius:8px;font-size:14px;line-height:1.6;">
-    <strong>📚 Go deeper — the full workflow, step by step.</strong> The author also writes a paid Chinese column, 《Meta 分析实操手记》, covering the whole meta-analysis pipeline: choosing a question, building a reproducible search, dual screening &amp; extraction, RoB 2 judgements, and reading forest plots — one practical instalment each week. <a href="https://wx.zsxq.com/group/15551248281522" target="_blank" rel="noopener">Join on Zhishixingqiu (Knowledge Planet)</a> — early-bird ¥99. 系统学全流程的中文专栏，每周一篇实操。
-  </div>
-  
-  <footer>Meta Workbench — built by R. Dong, emergency physician &amp; systematic reviewer, Tianjin. <a href="../index.html">Back to all tools</a>. Tools are provided for research use; always verify figures against your own analysis before submission.</footer>
+<div style="margin:32px 0 0;padding:14px 16px;border:1px solid #e2e2e2;border-radius:8px;font-size:14px;line-height:1.6;">
+<strong>📚 Go deeper — the full workflow, step by step.</strong> The author also writes a paid Chinese column, 《Meta 分析实操手记》, covering the whole meta-analysis pipeline: choosing a question, building a reproducible search, dual screening &amp; extraction, RoB 2 judgements, and reading forest plots — one practical instalment each week. <a href="https://wx.zsxq.com/group/15551248281522" target="_blank" rel="noopener">Join on Zhishixingqiu (Knowledge Planet)</a> — early-bird ¥99. 系统学全流程的中文专栏，每周一篇实操。
+</div>
+
+<div style="margin:28px 0 0;padding:12px 16px;border:1px solid #e2e2e2;border-radius:8px;font-size:14px;line-height:1.6;background:#fff;">
+<strong>More free tools from Meta Workbench:</strong> <a href="../forest-plot-generator/">Forest Plot Generator</a> &#183; <a href="../prisma-flow-diagram-generator/">PRISMA Flow Diagram Generator</a> &#183; <a href="../sample-size-calculator/">Sample Size Calculator</a> &#183; <a href="../index.html">All tools</a>
+</div>
+
+  <footer>Meta Workbench — built by R. Dong, a physician &amp; systematic reviewer. <a href="../index.html">Back to all tools</a>. Tools are provided for research use; always verify figures against your own analysis before submission.</footer>
 </div>
 
 <script>
