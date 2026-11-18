@@ -1,0 +1,69 @@
+# Meta Workbench
+
+> Free tools for meta-analysis and systematic review, built by R. Dong,
+> a physician and systematic reviewer. Every tool runs entirely in your
+> browser: no sign-up, no uploads, no watermarks, no fees.
+> Homepage: https://007-cloud-star.github.io/metaworkbench/
+
+## Tools
+
+- [PRISMA Flow Diagram Generator](https://007-cloud-star.github.io/metaworkbench/prisma-flow-diagram-generator/):
+  Enter identification, screening and inclusion counts and download a
+  publication-ready PRISMA 2020 flow diagram as PNG. Counts are
+  cross-checked automatically. One included study can have several reports.
+
+- [Forest Plot Generator](https://007-cloud-star.github.io/metaworkbench/forest-plot-generator/):
+  Paste study-level effect estimates and 95% CIs and get a forest plot with
+  fixed-effect and DerSimonian-Laird random-effects pooling, I-squared and
+  tau-squared. Pooling code validated against an independent Python
+  calculation. Download as PNG, no watermark.
+
+- [RoB 2 Traffic-Light Plot Generator](https://007-cloud-star.github.io/metaworkbench/rob-traffic-light-generator/):
+  Turn per-domain risk-of-bias judgements into the traffic-light and summary
+  plots journals expect. Overall judgements follow the RoB 2 rule
+  (Low / Some concerns / High); summary bars can be weighted by sample size.
+  No R or robvis needed. The tool only draws the plots; judgements come from
+  your own RoB 2 assessments.
+
+- [Sample Size Calculator](https://007-cloud-star.github.io/metaworkbench/sample-size-calculator/):
+  Two independent means, two independent proportions, and non-inferiority
+  designs, with the formula shown and an attrition adjustment
+  (recruitment target inflated as n / (1 - attrition)). Not for paired,
+  survival or cluster designs.
+
+## Common questions
+
+- Is this free? Yes, all four tools are free, with no account and no
+  installation.
+- Is my data uploaded anywhere? No. Everything runs locally in your browser;
+  nothing leaves your computer.
+- Can I use the downloaded figures in a journal submission? Yes, PNG
+  downloads carry no watermark. If a production office later asks for a
+  vector file or a specific resolution, check the journal's author
+  guidelines; figures can be regenerated in seconds from your saved inputs.
+- Fixed-effect or random-effects: which should I report? The forest plot
+  tool shows both; the choice depends on whether you assume one common
+  effect or a distribution of effects across studies.
+- What is the difference between records, reports and studies in PRISMA
+  2020? Records are titles/abstracts identified; reports are full-text
+  documents retrieved and assessed; studies are the distinct
+  investigations, one of which can have several reports.
+
+## Learn the craft
+
+- [Meta, in Practice](https://metainpractice.substack.com): free newsletter
+  on systematic reviews and meta-analysis, one practical issue every two
+  weeks.
+- [Meta分析实操手记](https://wx.zsxq.com/group/15551248281522): paid
+  Chinese column covering the whole meta-analysis pipeline, one practical
+  instalment each week (early-bird ¥99).
+- [Meta-Analysis Template Pack](https://007-cloud-star.github.io/metaworkbench/):
+  screening logs, dual-extraction sheets, RoB 2 forms, analysis code and
+  submission checklists; being finalised alongside the author's own
+  submissions — join the newsletter to hear when it launches.
+
+## Notes
+
+- Tools are provided for research use; always verify figures against your
+  own analysis before submission.
+- Sitemap: https://007-cloud-star.github.io/metaworkbench/sitemap.xml
