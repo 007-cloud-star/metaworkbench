@@ -57,10 +57,9 @@
 - [Meta分析实操手记](https://wx.zsxq.com/group/15551248281522): paid
   Chinese column covering the whole meta-analysis pipeline, one practical
   instalment each week (early-bird ¥99).
-- [Meta-Analysis Template Pack](https://007-cloud-star.github.io/metaworkbench/):
+- [Meta-Analysis Template Pack](https://007-cloud-star.github.io/metaworkbench/template-pack.html):
   screening logs, dual-extraction sheets, RoB 2 forms, analysis code and
-  submission checklists; being finalised alongside the author's own
-  submissions — join the newsletter to hear when it launches.
+  submission checklists; now available to buy.
 
 ## Notes
 
