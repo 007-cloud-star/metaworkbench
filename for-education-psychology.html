@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meta-Analysis Tools for Education & Psychology Researchers | Meta Workbench</title>
+<meta name="description" content="Free browser-based tools for education and psychology meta-analyses: a PRISMA 2020 flow diagram generator, a forest plot generator, a risk-of-bias traffic-light plot generator and a sample size calculator. No sign-up, no uploads — everything runs locally in your browser.">
+<link rel="canonical" href="https://007-cloud-star.github.io/metaworkbench/for-education-psychology.html">
+<link rel="icon" type="image/svg+xml" href="/metaworkbench/favicon.svg">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Meta Workbench">
+<meta property="og:title" content="Meta-Analysis Tools for Education & Psychology Researchers | Meta Workbench">
+<meta property="og:description" content="Free browser-based tools for education and psychology meta-analyses: PRISMA 2020 flow diagrams, forest plots, risk-of-bias traffic lights and sample size calculations. No sign-up, no uploads.">
+<meta property="og:url" content="https://007-cloud-star.github.io/metaworkbench/for-education-psychology.html">
+<meta property="og:image" content="https://007-cloud-star.github.io/metaworkbench/og-image.png">
+<meta name="twitter:image" content="https://007-cloud-star.github.io/metaworkbench/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Meta-Analysis Tools for Education & Psychology Researchers | Meta Workbench">
+<meta name="twitter:description" content="Free browser-based tools for education and psychology meta-analyses: PRISMA 2020 flow diagrams, forest plots, risk-of-bias traffic lights and sample size calculations. No sign-up, no uploads.">
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is this only for medical meta-analyses?", "acceptedAnswer": {"@type": "Answer", "text": "No. The tools were built by a medical researcher, but nothing in them is medicine-specific. PRISMA 2020 is a discipline-neutral reporting standard, a forest plot pools effect sizes the same way whether they come from classroom interventions or clinical trials, and the risk-of-bias plotter accepts judgements from any appraisal tool. Education and psychology reviewers use the same four tools with their own data."}}, {"@type": "Question", "name": "Does PRISMA 2020 apply to education and psychology reviews?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. PRISMA 2020 was written as a general reporting guideline for systematic reviews, not a medical one, and journals and funders in education and psychology increasingly expect a PRISMA-style flow diagram and checklist. The generator on this page produces the standard PRISMA 2020 diagram from your own identification, screening and inclusion counts."}}, {"@type": "Question", "name": "Which risk-of-bias tool should I use — RoB 2, ROBINS-I, or something else?", "acceptedAnswer": {"@type": "Answer", "text": "That depends on your included designs: RoB 2 for randomised trials, ROBINS-I for non-randomised studies of interventions, and discipline-specific standards where your field requires them. The traffic-light generator plots whatever domain judgements you enter and can apply the RoB 2 overall-judgement rule when you use RoB 2; it does not force one appraisal framework on you."}}, {"@type": "Question", "name": "My meta-analysis has more than 50 included studies. Can the tools handle that?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Large evidence bases are the norm in education and psychology, and the forest plot and traffic-light generators are built for long study lists — paste your study-level results and the plots are drawn in your browser. Because everything runs locally, there is no upload limit and your unpublished data never leaves your machine."}}, {"@type": "Question", "name": "Are the tools really free? Do I need to install anything or create an account?", "acceptedAnswer": {"@type": "Answer", "text": "The four tools are free, with no account, no installation and no watermarks. They run entirely in your browser: open the tool page, enter or paste your numbers, and download the figure. Your data is not uploaded to any server."}}]}
+</script>
+<style>
+  body { font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin: 0; color: #1a1a1a; background: #fafafa; }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 32px 16px 64px; }
+  .brand { font-size: 15px; letter-spacing: .12em; text-transform: uppercase; color: #0b5394; font-weight: 700; }
+  h1 { font-size: 34px; margin: 10px 0 8px; }
+  p.lead { font-size: 17px; color: #444; line-height: 1.6; max-width: 720px; }
+  h2 { font-size: 21px; margin: 36px 0 12px; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+  .card { background: #fff; border: 1px solid #ddd; border-radius: 10px; padding: 16px 18px; }
+  .card h3 { margin: 0 0 6px; font-size: 16px; }
+  .card p { margin: 0 0 10px; font-size: 14px; color: #444; line-height: 1.55; }
+  .badge { display: inline-block; font-size: 12px; padding: 2px 8px; border-radius: 20px; background: #e6f2e6; color: #1e6b1e; }
+  .badge.soon { background: #f3ead8; color: #7a5b12; }
+  a.btn { display: inline-block; background: #0b5394; color: #fff; text-decoration: none; padding: 8px 14px; border-radius: 8px; font-size: 14px; }
+  .band { background: #fff; border: 1px solid #ddd; border-radius: 10px; padding: 18px 20px; margin-top: 14px; }
+  .band p { line-height: 1.6; color: #333; margin: 6px 0; }
+  .band ul { line-height: 1.7; color: #333; margin: 6px 0; padding-left: 20px; }
+  .faq h3 { font-size: 16px; margin: 20px 0 6px; }
+  .faq p { line-height: 1.6; color: #333; margin: 6px 0; max-width: 760px; }
+  footer { margin-top: 48px; font-size: 13px; color: #777; border-top: 1px solid #e2e2e2; padding-top: 12px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand">Meta Workbench</div>
+  <h1>Meta-Analysis Tools for Education &amp; Psychology Researchers</h1>
+  <p class="lead">Systematic reviews in education and psychology have outgrown the spreadsheet-and-screenshot workflow. These four free tools handle the figures your reviewers and editors ask for — PRISMA 2020 flow diagram, forest plot, risk-of-bias traffic lights, sample size — entirely in your browser. No sign-up, no uploads, no watermarks.</p>
+
+  <h2>Why social-science reviews feel harder than they should</h2>
+  <div class="band">
+    <p><strong>Bigger evidence bases.</strong> A clinical meta-analysis may pool a handful of trials; an education or psychology review routinely screens thousands of records and includes 50 or more studies. Every manual step — redrawing a flow diagram, reformatting a forest plot, rebuilding a bias table — is multiplied by that scale.</p>
+    <p><strong>PRISMA pressure is spreading.</strong> PRISMA 2020 was written as a general reporting standard, not a medical one, and journals, funders and thesis committees in education and psychology increasingly expect a compliant flow diagram and checklist — often without providing any tooling for it.</p>
+    <p><strong>Methods are standardising.</strong> Registered protocols, dual screening, structured risk-of-bias appraisal and reproducible analysis are becoming the norm outside medicine too. The workflow that medical reviewers built over the last decade transfers almost unchanged — the tools below are that workflow, minus the medical vocabulary.</p>
+  </div>
+
+  <h2>The four tools</h2>
+  <div class="cards">
+    <div class="card">
+      <h3>PRISMA Flow Diagram Generator</h3>
+      <p>Enter your identification, screening and inclusion counts and download a publication-ready PRISMA 2020 flow diagram as PNG. Counts are cross-checked automatically — useful when your screening log runs to thousands of records.</p>
+      <span class="badge">Live</span>&nbsp;<a class="btn" href="./prisma-flow-diagram-generator/index.html">Open tool</a>
+    </div>
+    <div class="card">
+      <h3>Forest Plot Generator</h3>
+      <p>Paste study-level results and get a forest plot with fixed-effect and DerSimonian–Laird random-effects pooling, I² and τ². Handles long study lists — the 50-plus-study syntheses common in education and psychology. Pooling code validated against an independent Python calculation.</p>
+      <span class="badge">Live</span>&nbsp;<a class="btn" href="./forest-plot-generator/index.html">Open tool</a>
+    </div>
+    <div class="card">
+      <h3>Risk-of-Bias Traffic-Light Plot</h3>
+      <p>Turn your appraisal judgements into the traffic-light and summary plots journals expect, without fighting R code. Enter judgements from RoB 2, ROBINS-I or your discipline's own criteria; overall judgements can follow the RoB 2 rule, and summary bars can be weighted by sample size.</p>
+      <span class="badge">Live</span>&nbsp;<a class="btn" href="./rob-traffic-light-generator/index.html">Open tool</a>
+    </div>
+    <div class="card">
+      <h3>Sample Size Calculator</h3>
+      <p>The common comparative designs — two means, two proportions, non-inferiority — with the formula and an attrition adjustment shown, not hidden. Handy for planning the primary studies and grant proposals that feed your next review.</p>
+      <span class="badge">Live</span>&nbsp;<a class="btn" href="./sample-size-calculator/index.html">Open tool</a>
+    </div>
+  </div>
+
+  <h2>Coming soon: the Template Pack, social-science edition</h2>
+  <div class="band">
+    <p>The <strong>Meta-Analysis Template Pack</strong> — the complete working files for a systematic review: protocol &amp; registration template, search and screening logs, data-extraction form, risk-of-bias workbook, analysis starter, evidence-grading sheets and a submission checklist, plus the TRIPOD+AI reporting material for prediction-model studies — is being prepared in an edition for non-medical reviewers, with worked examples drawn from education and psychology syntheses.</p>
+    <p>Written for reviewers in:</p>
+    <ul>
+      <li>Education research</li>
+      <li>Psychology &amp; behavioural science</li>
+      <li>Economics &amp; management</li>
+      <li>Environmental &amp; sustainability science</li>
+      <li>Other social sciences running PRISMA 2020 reviews</li>
+    </ul>
+    <p>Follow the free newsletter <a href="https://metainpractice.substack.com">Meta, in Practice</a> to hear when the edition opens, or browse the <a href="https://store.dodopayments.com/ruibin-research-tools">Ruibin Research Tools store</a> for the toolkits already available.</p>
+  </div>
+
+  <h2>FAQ</h2>
+  <div class="faq">
+    <h3>Is this only for medical meta-analyses?</h3>
+    <p>No. The tools were built by a medical researcher, but nothing in them is medicine-specific. PRISMA 2020 is a discipline-neutral reporting standard, a forest plot pools effect sizes the same way whether they come from classroom interventions or clinical trials, and the risk-of-bias plotter accepts judgements from any appraisal tool. Education and psychology reviewers use the same four tools with their own data.</p>
+
+    <h3>Does PRISMA 2020 apply to education and psychology reviews?</h3>
+    <p>Yes. PRISMA 2020 was written as a general reporting guideline for systematic reviews, not a medical one, and journals and funders in education and psychology increasingly expect a PRISMA-style flow diagram and checklist. The generator on this page produces the standard PRISMA 2020 diagram from your own identification, screening and inclusion counts.</p>
+
+    <h3>Which risk-of-bias tool should I use — RoB 2, ROBINS-I, or something else?</h3>
+    <p>That depends on your included designs: RoB 2 for randomised trials, ROBINS-I for non-randomised studies of interventions, and discipline-specific standards where your field requires them. The traffic-light generator plots whatever domain judgements you enter and can apply the RoB 2 overall-judgement rule when you use RoB 2; it does not force one appraisal framework on you.</p>
+
+    <h3>My meta-analysis has more than 50 included studies. Can the tools handle that?</h3>
+    <p>Yes. Large evidence bases are the norm in education and psychology, and the forest plot and traffic-light generators are built for long study lists — paste your study-level results and the plots are drawn in your browser. Because everything runs locally, there is no upload limit and your unpublished data never leaves your machine.</p>
+
+    <h3>Are the tools really free? Do I need to install anything or create an account?</h3>
+    <p>The four tools are free, with no account, no installation and no watermarks. They run entirely in your browser: open the tool page, enter or paste your numbers, and download the figure. Your data is not uploaded to any server.</p>
+  </div>
+
+  <footer>Meta Workbench — built by R. Dong, a physician & systematic reviewer. Tools are provided for research use; always verify figures against your own analysis before submission. · <a href="./privacy.html">Privacy</a> · <a href="./terms.html">Terms</a> · <a href="https://store.dodopayments.com/ruibin-research-tools">Store</a> · Contact: drb123@163.com</footer>
+</div>
+</body>
+</html>
